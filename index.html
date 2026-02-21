@@ -11,13 +11,13 @@
     
     <title>Controle Financeiro</title>
     
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg ' viewBox='0 0 192 192'%3E%3Crect fill='%2327ae60' width='192' height='192' rx='30'/%3E%3Ctext x='96' y='130' font-size='100' text-anchor='middle'%3E💰%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%2327ae60' width='192' height='192' rx='30'/%3E%3Ctext x='96' y='130' font-size='100' text-anchor='middle'%3E💰%3C/text%3E%3C/svg%3E">
     
     <link rel="manifest" href='data:application/json;base64,eyJuYW1lIjoiQ29udHJvbGUgRmluYW5jZWlybyIsInNob3J0X25hbWUiOiJGaW5hbmNlaXJvIiwic3RhcnRfdXJsIjoiL2luZGV4Lmh0bWwiLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjZjVmNWY1IiwidGhlbWVfY29sb3IiOiIjMmMzZTUwIiwib3JpZW50YXRpb24iOiJwb3J0cmFpdCIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnJTIweG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyUyMHZpZXdCb3g9JzAlMjAwJTIwMTkyJTIwMTkyJyUzRSUzQ3JlY3QlMjBmaWxsPSclMjMyN2FlNjAlMjclMjB3aWR0aD0nMTkyJyUyMGhlaWdodD0nMTkyJyUyMHJ4PSczMCcvJTNFJTNDdGV4dCUyMHg9Jzk2JyUyMHk9JzEzMCclMjBmb250LXNpemU9JzEwMCclMjB0ZXh0LWFuY2hvcj0nbWlkZGxlJyUzRSVDMiU5MiVDMiVBNSUzQyUyRnRleHQlM0UlM0MlMkZzdmclM0UiLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0='>
     
-    <script src="https://cdn.jsdelivr.net/npm/chart.js "></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js "></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js "></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -608,7 +608,6 @@
             border-radius: 8px;
         }
         
-        /* Opções de repetição */
         .recorrente-options {
             background: #f0f8ff;
             border: 2px solid #3498db;
@@ -624,7 +623,7 @@
             display: block;
         }
 
-        /* NOVOS ESTILOS PARA GERENCIAMENTO DE CATEGORIAS */
+        /* ESTILOS CATEGORIAS */
         .categoria-actions {
             display: flex;
             gap: 8px;
@@ -729,7 +728,7 @@
     </style>
 </head>
 <body>
-    <div class="header">
+        <div class="header">
         <div class="header-content">
             <h1>💰 Controle Financeiro</h1>
             <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
@@ -744,6 +743,7 @@
     </div>
 
     <div class="container">
+        <!-- DASHBOARD -->
         <div id="dashboard-tab">
             <div class="filters-section">
                 <div class="filter-group">
@@ -839,6 +839,7 @@
             </div>
         </div>
 
+        <!-- LANÇAMENTOS -->
         <div id="lancamentos-tab" class="hidden">
             <div class="filters-section">
                 <div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
@@ -873,9 +874,9 @@
                     <label>Status (Despesas)</label>
                     <div class="filter-buttons">
                         <button class="filter-btn active" onclick="filterStatus('TODOS', this)">TODOS</button>
-                        <button class="filter-btn pendente-btn" onclick="filterStatus('PENDENTE', this)">⏳ Pendentes</button>
-                        <button class="filter-btn pago-btn" onclick="filterStatus('PAGO', this)">✅ Pagas</button>
-                        <button class="filter-btn atrasado-btn" onclick="filterStatus('ATRASADO', this)">🔔 Atrasadas</button>
+                        <button class="filter-btn" onclick="filterStatus('PENDENTE', this)">⏳ Pendentes</button>
+                        <button class="filter-btn" onclick="filterStatus('PAGO', this)">✅ Pagas</button>
+                        <button class="filter-btn" onclick="filterStatus('ATRASADO', this)">🔔 Atrasadas</button>
                     </div>
                 </div>
                 <div class="filter-group" style="margin-top: 12px;">
@@ -927,7 +928,7 @@
             </div>
         </div>
 
-        <!-- NOVA ABA DE CATEGORIAS -->
+        <!-- CATEGORIAS -->
         <div id="categorias-tab" class="hidden">
             <div class="filters-section">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
@@ -939,20 +940,17 @@
                 
                 <div class="filter-group">
                     <label>Despesas</label>
-                    <div id="lista-categorias-despesa" style="margin-bottom: 20px;">
-                        <!-- Preenchido via JS -->
-                    </div>
+                    <div id="lista-categorias-despesa" style="margin-bottom: 20px;"></div>
                 </div>
                 
                 <div class="filter-group">
                     <label>Receitas</label>
-                    <div id="lista-categorias-receita">
-                        <!-- Preenchido via JS -->
-                    </div>
+                    <div id="lista-categorias-receita"></div>
                 </div>
             </div>
         </div>
 
+        <!-- SINCRONIZAR -->
         <div id="sync-tab" class="hidden">
             <div class="filters-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
                 <h3 style="margin-bottom: 10px;">🔄 Sincronização Manual</h3>
@@ -1002,8 +1000,7 @@
     </div>
 
     <button class="fab" onclick="openModal()">+</button>
-
-    <!-- Modal de Lançamento -->
+        <!-- Modal de Lançamento -->
     <div class="modal" id="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1063,7 +1060,7 @@
 
                 <div class="form-group">
                     <label>Valor Total (R$)</label>
-                    <input type="number" id="valor" step="0.01" placeholder="0,00" required oninput="if(document.getElementById('is-parcelado').checked) calcularParcelas()">
+                    <input type="number" id="valor" step="0.01" placeholder="0,00" required oninput="atualizarValores()">
                 </div>
 
                 <!-- OPÇÃO DE PARCELAMENTO -->
@@ -1082,7 +1079,7 @@
                     </div>
                 </div>
 
-                <!-- OPÇÃO DE LANÇAMENTO RECORRENTE (NOVO) -->
+                <!-- OPÇÃO DE LANÇAMENTO RECORRENTE -->
                 <div class="checkbox-group" style="background: #e8f4f8; border: 2px solid #3498db;">
                     <input type="checkbox" id="is-recorrente" onchange="toggleRecorrente()">
                     <label for="is-recorrente">🔁 Lançamento Recorrente (Mensal Fixo)</label>
@@ -1135,7 +1132,7 @@
         </div>
     </div>
 
-    <!-- NOVO: Modal de Gerenciamento de Categorias -->
+    <!-- Modal de Nova Categoria -->
     <div class="modal" id="categoria-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1172,6 +1169,7 @@
         </div>
     </div>
 
+    <!-- Modal de Exportar Excel -->
     <div class="modal" id="export-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1203,6 +1201,7 @@
         </div>
     </div>
 
+    <!-- Modal de Exportar para Sincronização -->
     <div class="modal" id="sync-export-modal">
         <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
@@ -1234,6 +1233,7 @@
         </div>
     </div>
 
+    <!-- Modal de Scanner QR -->
     <div class="modal" id="qr-scanner-modal">
         <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
@@ -1259,8 +1259,7 @@
             </div>
         </div>
     </div>
-
-    <script>
+        <script>
         // Service Worker
         if ('serviceWorker' in navigator) {
             const swCode = `
@@ -1279,7 +1278,7 @@
                 .catch(err => console.log('Erro:', err));
         }
 
-        // Dados - agora carrega do localStorage ou usa padrão
+        // Dados
         let CATEGORIAS_DESPESA = JSON.parse(localStorage.getItem('categoriasDespesa')) || 
             ['INTERNET', 'LUZ', 'AGUA', 'CARTAO EMPRESA ITAU', 'PIC ITAU', 'SEGURO DO CARRO', 'DIVIDA', 'SALÃO', 'COMIDA', 'SCOBINHO', 'TV', 'SEGURANCA CASA', 'ACADEMIA', 'CARRO', 'CARTAO NEON', 'CARTAO CREDITO NU', 'CARTAO CREDITO ITAU', 'CASA', 'COMPRAS', 'TELEFONE', 'VIAGEM', 'SAUDE', 'PRESENTE'];
         
@@ -1409,16 +1408,20 @@
             renderTable();
         }
 
-        // NOVAS FUNÇÕES DE CATEGORIA
-        function renderCategoriasList() {
+        // FUNÇÕES DE CATEGORIA
+              function renderCategoriasList() {
             const containerDespesa = document.getElementById('lista-categorias-despesa');
             const containerReceita = document.getElementById('lista-categorias-receita');
             
             containerDespesa.innerHTML = '';
             containerReceita.innerHTML = '';
             
-            // Renderiza despesas
-            CATEGORIAS_DESPESA.forEach((cat, index) => {
+            // Ordena alfabeticamente
+            const despesasOrdenadas = [...CATEGORIAS_DESPESA].sort((a, b) => a.localeCompare(b));
+            const receitasOrdenadas = [...CATEGORIAS_RECEITA].sort((a, b) => a.localeCompare(b));
+            
+            despesasOrdenadas.forEach((cat) => {
+                const index = CATEGORIAS_DESPESA.indexOf(cat);
                 const count = lancamentos.filter(l => l.categoria === cat).length;
                 const item = document.createElement('div');
                 item.className = 'categoria-item';
@@ -1437,8 +1440,8 @@
                 containerDespesa.appendChild(item);
             });
             
-            // Renderiza receitas
-            CATEGORIAS_RECEITA.forEach((cat, index) => {
+            receitasOrdenadas.forEach((cat) => {
+                const index = CATEGORIAS_RECEITA.indexOf(cat);
                 const count = lancamentos.filter(l => l.categoria === cat).length;
                 const item = document.createElement('div');
                 item.className = 'categoria-item';
@@ -1472,7 +1475,7 @@
         function deleteCategoria(tipo, nome, index) {
             const count = lancamentos.filter(l => l.categoria === nome).length;
             if (count > 0) {
-                alert(`❌ Não é possível excluir a categoria "${nome}" porque existem ${count} lançamentos vinculados a ela.\\n\\nExclua os lançamentos primeiro ou mude a categoria deles.`);
+                alert(`❌ Não é possível excluir a categoria "${nome}" porque existem ${count} lançamentos vinculados a ela.\n\nExclua os lançamentos primeiro ou mude a categoria deles.`);
                 return;
             }
             
@@ -1497,18 +1500,15 @@
             const tipo = document.getElementById('nova-categoria-tipo').value;
             const dia = parseInt(document.getElementById('nova-categoria-dia').value);
             
-            // Verifica se já existe
             const lista = tipo === 'Despesa' ? CATEGORIAS_DESPESA : CATEGORIAS_RECEITA;
             if (lista.includes(nome)) {
                 alert('❌ Esta categoria já existe!');
                 return;
             }
             
-            // Adiciona
             lista.push(nome);
-            lista.sort(); // Ordena alfabeticamente
+            lista.sort();
             
-            // Configura vencimento padrão se informado
             if (dia && dia >= 1 && dia <= 31) {
                 vencimentosConfig[nome] = dia;
             }
@@ -1584,6 +1584,11 @@
             }
         }
 
+        function atualizarValores() {
+            if (document.getElementById('is-parcelado').checked) calcularParcelas();
+            if (document.getElementById('is-recorrente').checked) atualizarValorRecorrente();
+        }
+
         function toggleParcelamento() {
             const isParcelado = document.getElementById('is-parcelado').checked;
             const fields = document.getElementById('parcelamento-fields');
@@ -1619,11 +1624,6 @@
             document.getElementById('valor-recorrente').textContent = formatMoney(valor).replace('R$ ', '');
         }
 
-        document.getElementById('valor').addEventListener('input', function() {
-            if (document.getElementById('is-parcelado').checked) calcularParcelas();
-            if (document.getElementById('is-recorrente').checked) atualizarValorRecorrente();
-        });
-
         function calcularParcelas() {
             const valor = parseFloat(document.getElementById('valor').value) || 0;
             const qtd = parseInt(document.getElementById('qtd-parcelas').value) || 1;
@@ -1632,8 +1632,10 @@
 
         function isAtrasado(l) {
             if (l.tipo !== 'Despesa' || l.pago || !l.dataVencimento) return false;
-            const hoje = new Date(); hoje.setHours(0,0,0,0);
-            return new Date(l.dataVencimento + 'T12:00:00') < hoje;
+            const hoje = new Date(); 
+            hoje.setHours(0,0,0,0);
+            const venc = new Date(l.dataVencimento + 'T12:00:00');
+            return venc < hoje;
         }
 
         function togglePago(id) {
@@ -1645,8 +1647,7 @@
                 updateDashboard();
             }
         }
-
-        function updateDashboard() {
+                function updateDashboard() {
             const filtered = lancamentos.filter(l => {
                 if (filtros.mes !== 'TODOS' && l.mes !== filtros.mes) return false;
                 if (filtros.categoria !== 'TODOS' && l.categoria !== filtros.categoria) return false;
@@ -1758,7 +1759,7 @@
             const tbody = document.getElementById('lancamentos-table');
             tbody.innerHTML = '';
 
-            filtered.sort((a, b) => new Date(b.data) - new Date(a.data)).forEach(l => {
+            filtered.sort((a, b) => new Date(b.data + 'T12:00:00') - new Date(a.data + 'T12:00:00')).forEach(l => {
                 const tr = document.createElement('tr');
                 if (l.pago && l.tipo === 'Despesa') tr.classList.add('linha-pago');
                 if (isAtrasado(l)) tr.classList.add('linha-atrasada');
@@ -1786,18 +1787,23 @@
             });
         }
 
-        function criarBotoesCategorias() {
-            const containerDash = document.getElementById('cat-filters');
-            containerDash.innerHTML = '<button class="filter-btn active" onclick="filterCategoria(\\'TODOS\\', this)">TODOS</button>';
+               function criarBotoesCategorias() {
+            // Ordena as categorias alfabeticamente
+            const despesasOrdenadas = [...CATEGORIAS_DESPESA].sort((a, b) => a.localeCompare(b));
+            const receitasOrdenadas = [...CATEGORIAS_RECEITA].sort((a, b) => a.localeCompare(b));
             
-            CATEGORIAS_DESPESA.forEach(cat => {
+            const containerDash = document.getElementById('cat-filters');
+            containerDash.innerHTML = '<button class="filter-btn active" onclick="filterCategoria(\'TODOS\', this)">TODOS</button>';
+            
+            despesasOrdenadas.forEach(cat => {
                 const btn = document.createElement('button');
                 btn.className = 'filter-btn';
                 btn.textContent = cat;
                 btn.onclick = function() { filterCategoria(cat, this); };
                 containerDash.appendChild(btn);
             });
-            CATEGORIAS_RECEITA.forEach(cat => {
+            
+            receitasOrdenadas.forEach(cat => {
                 const btn = document.createElement('button');
                 btn.className = 'filter-btn';
                 btn.textContent = cat;
@@ -1806,9 +1812,9 @@
             });
 
             const containerLanc = document.getElementById('cat-lancamento-filters');
-            containerLanc.innerHTML = '<button class="filter-btn active" onclick="filterCatLancamento(\\'TODOS\\', this)">TODOS</button>';
+            containerLanc.innerHTML = '<button class="filter-btn active" onclick="filterCatLancamento(\'TODOS\', this)">TODOS</button>';
             
-            [...CATEGORIAS_DESPESA, ...CATEGORIAS_RECEITA].forEach(cat => {
+            [...despesasOrdenadas, ...receitasOrdenadas].forEach(cat => {
                 const btn = document.createElement('button');
                 btn.className = 'filter-btn';
                 btn.textContent = cat;
@@ -1817,12 +1823,15 @@
             });
         }
 
-        function updateCategorias() {
+               function updateCategorias() {
             const tipo = document.getElementById('tipo').value;
             const select = document.getElementById('categoria');
             select.innerHTML = '';
+            
             const cats = tipo === 'Despesa' ? CATEGORIAS_DESPESA : CATEGORIAS_RECEITA;
-            cats.forEach(cat => {
+            const catsOrdenadas = [...cats].sort((a, b) => a.localeCompare(b));
+            
+            catsOrdenadas.forEach(cat => {
                 const option = document.createElement('option');
                 option.value = cat;
                 option.textContent = cat;
@@ -1878,7 +1887,7 @@
                 saveData();
                 renderTable();
                 updateDashboard();
-                renderCategoriasList(); // Atualiza contadores
+                renderCategoriasList();
             }
         }
 
@@ -1896,9 +1905,9 @@
             if (mes !== 'TODOS') dados = dados.filter(l => l.mes === mes);
             if (dados.length === 0) { alert('Nada para exportar!'); return; }
 
-            let csv = 'Data;Vencimento;Mes;Descricao;Tipo;Categoria;Valor;Pago;Parcela;Recorrente;Obs\\n';
+            let csv = 'Data;Vencimento;Mes;Descricao;Tipo;Categoria;Valor;Pago;Parcela;Recorrente;Obs\n';
             dados.forEach(l => {
-                csv += `${new Date(l.data + 'T12:00:00').toLocaleDateString('pt-BR')};${l.dataVencimento ? new Date(l.dataVencimento + 'T12:00:00').toLocaleDateString('pt-BR') : ''};${l.mes};${l.descricao};${l.tipo};${l.categoria};${l.valor.toFixed(2)};${l.tipo === 'Despesa' ? (l.pago ? 'SIM' : 'NAO') : '-'};${l.parcela || ''};${l.recorrente ? 'SIM' : 'NAO'};${(l.observacoes || '').replace(/;/g, ',')}\\n`;
+                csv += `${new Date(l.data + 'T12:00:00').toLocaleDateString('pt-BR')};${l.dataVencimento ? new Date(l.dataVencimento + 'T12:00:00').toLocaleDateString('pt-BR') : ''};${l.mes};${l.descricao};${l.tipo};${l.categoria};${l.valor.toFixed(2)};${l.tipo === 'Despesa' ? (l.pago ? 'SIM' : 'NAO') : '-'};${l.parcela || ''};${l.recorrente ? 'SIM' : 'NAO'};${(l.observacoes || '').replace(/;/g, ',')}\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1911,18 +1920,18 @@
             closeExportModal();
             alert(`✅ ${dados.length} lançamentos exportados!`);
         }
-
-        // FORMULÁRIO DE LANÇAMENTO CORRIGIDO
+                // FORMULÁRIO DE LANÇAMENTO CORRIGIDO
         document.getElementById('form-lancamento').addEventListener('submit', function(e) {
             e.preventDefault();
             const id = document.getElementById('edit-id').value;
 
             if (id) {
-                // EDIÇÃO: Apenas atualiza o lançamento existente
+                // EDIÇÃO
                 const idx = lancamentos.findIndex(l => l.id === parseInt(id));
                 const l = lancamentos[idx];
                 lancamentos[idx] = {
-                    id: parseInt(id), data: document.getElementById('data').value,
+                    id: parseInt(id), 
+                    data: document.getElementById('data').value,
                     dataVencimento: document.getElementById('data-vencimento').value,
                     mes: document.getElementById('mes').value,
                     descricao: document.getElementById('descricao').value,
@@ -1931,7 +1940,8 @@
                     valor: parseFloat(document.getElementById('valor').value),
                     pago: document.getElementById('tipo').value === 'Despesa' ? document.getElementById('is-pago').checked : false,
                     observacoes: document.getElementById('observacoes').value,
-                    parcela: l.parcela, totalParcelas: l.totalParcelas,
+                    parcela: l.parcela, 
+                    totalParcelas: l.totalParcelas,
                     recorrente: l.recorrente || false
                 };
             } else {
@@ -1949,17 +1959,15 @@
                 const obs = document.getElementById('observacoes').value;
 
                 if (isParcelado) {
-                    // SISTEMA DE PARCELAMENTO (divide o valor)
+                    // PARCELAMENTO
                     const qtd = parseInt(document.getElementById('qtd-parcelas').value);
                     const grupoId = Date.now();
-                    
                     const dataBase = new Date(data + 'T12:00:00');
                     const vencBase = new Date(venc + 'T12:00:00');
                     
                     for (let i = 0; i < qtd; i++) {
                         const dataParcela = new Date(dataBase);
                         dataParcela.setMonth(dataBase.getMonth() + i);
-                        
                         const vencParcela = new Date(vencBase);
                         vencParcela.setMonth(vencBase.getMonth() + i);
                         
@@ -1981,31 +1989,36 @@
                     }
                     alert(`✅ ${qtd} parcelas de ${formatMoney(valor/qtd)} criadas!`);
                     
-                } else if (isRecorrente) {
-                    // SISTEMA RECORRENTE CORRIGIDO ✅
+                                   } else if (isRecorrente) {
+                    // RECORRENTE CORRIGIDO - USA DATA DE VENCIMENTO COMO BASE
                     const qtdMeses = parseInt(document.getElementById('meses-recorrentes').value);
                     const grupoId = Date.now();
                     
+                    // USA A DATA DE VENCIMENTO COMO BASE (não a data do lançamento e nem o campo mes)
                     const vencDate = new Date(venc + 'T12:00:00');
                     const diaVencimento = vencDate.getDate();
-                    
-                    const dataBase = new Date(data + 'T12:00:00');
-                    const mesBase = dataBase.getMonth();
-                    const anoBase = dataBase.getFullYear();
+                    const mesVenc = vencDate.getMonth(); // 0-11 (jan-dez)
+                    const anoVenc = vencDate.getFullYear();
                     
                     for (let i = 0; i < qtdMeses; i++) {
-                        const mesAlvo = mesBase + i;
-                        const dataLancamento = new Date(anoBase, mesBase + i, dataBase.getDate(), 12, 0, 0);
+                        // Calcula mês e ano corretamente
+                        const mesAlvo = mesVenc + i;
+                        const anoAlvo = anoVenc + Math.floor(mesAlvo / 12);
+                        const mesReal = mesAlvo % 12;
                         
-                        const ultimoDiaDoMes = new Date(anoBase, mesAlvo + 1, 0).getDate();
-                        const diaVenc = Math.min(diaVencimento, ultimoDiaDoMes);
-                        const dataVencimento = new Date(anoBase, mesAlvo, diaVenc, 12, 0, 0);
+                        // Ajusta para o último dia do mês se necessário
+                        const ultimoDiaDoMes = new Date(anoAlvo, mesReal + 1, 0).getDate();
+                        const diaFinal = Math.min(diaVencimento, ultimoDiaDoMes);
+                        
+                        // Cria as datas
+                        const dataLancamento = new Date(anoAlvo, mesReal, diaFinal, 12, 0, 0);
+                        const dataVencimento = new Date(anoAlvo, mesReal, diaFinal, 12, 0, 0);
                         
                         lancamentos.push({
                             id: grupoId + i, 
                             data: formatDateLocal(dataLancamento),
                             dataVencimento: formatDateLocal(dataVencimento),
-                            mes: getMesFromDate(dataLancamento), 
+                            mes: MESES[mesReal], // Pega o mês correto do array
                             descricao: desc, 
                             tipo: tipo,
                             categoria: cat, 
@@ -2016,10 +2029,13 @@
                             grupoRecorrente: grupoId
                         });
                     }
-                    alert(`✅ ${qtdMeses} lançamentos recorrentes de ${formatMoney(valor)} criados!`);
                     
+                    const primeiroVenc = formatDateLocal(new Date(venc + 'T12:00:00'));
+                    const ultimoVenc = formatDateLocal(new Date(anoVenc + Math.floor((mesVenc + qtdMeses - 1) / 12), (mesVenc + qtdMeses - 1) % 12, Math.min(diaVencimento, new Date(anoVenc + Math.floor((mesVenc + qtdMeses - 1) / 12), (mesVenc + qtdMeses - 1) % 12 + 1, 0).getDate()), 12, 0, 0));
+                    
+                    alert(`✅ ${qtdMeses} lançamentos recorrentes de ${formatMoney(valor)} criados!\n\nPrimeiro: ${primeiroVenc}\nÚltimo: ${ultimoVenc}`);
                 } else {
-                    // LANÇAMENTO NORMAL (único)
+                    // NORMAL
                     lancamentos.push({
                         id: Date.now(), 
                         data: data, 
@@ -2158,7 +2174,6 @@
                 Object.assign(vencimentosConfig, data.vencimentosConfig);
             }
             
-            // Importa categorias também
             if (data.categoriasDespesa) {
                 data.categoriasDespesa.forEach(cat => {
                     if (!CATEGORIAS_DESPESA.includes(cat)) {
