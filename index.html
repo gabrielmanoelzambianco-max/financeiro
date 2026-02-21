@@ -11,13 +11,13 @@
     
     <title>Controle Financeiro</title>
     
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%2327ae60' width='192' height='192' rx='30'/%3E%3Ctext x='96' y='130' font-size='100' text-anchor='middle'%3E💰%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg ' viewBox='0 0 192 192'%3E%3Crect fill='%2327ae60' width='192' height='192' rx='30'/%3E%3Ctext x='96' y='130' font-size='100' text-anchor='middle'%3E💰%3C/text%3E%3C/svg%3E">
     
     <link rel="manifest" href='data:application/json;base64,eyJuYW1lIjoiQ29udHJvbGUgRmluYW5jZWlybyIsInNob3J0X25hbWUiOiJGaW5hbmNlaXJvIiwic3RhcnRfdXJsIjoiL2luZGV4Lmh0bWwiLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjZjVmNWY1IiwidGhlbWVfY29sb3IiOiIjMmMzZTUwIiwib3JpZW50YXRpb24iOiJwb3J0cmFpdCIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnJTIweG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyUyMHZpZXdCb3g9JzAlMjAwJTIwMTkyJTIwMTkyJyUzRSUzQ3JlY3QlMjBmaWxsPSclMjMyN2FlNjAlMjclMjB3aWR0aD0nMTkyJyUyMGhlaWdodD0nMTkyJyUyMHJ4PSczMCcvJTNFJTNDdGV4dCUyMHg9Jzk2JyUyMHk9JzEzMCclMjBmb250LXNpemU9JzEwMCclMjB0ZXh0LWFuY2hvcj0nbWlkZGxlJyUzRSVDMiU5MiVDMiVBNSUzQyUyRnRleHQlM0UlM0MlMkZzdmclM0UiLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0='>
     
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js "></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js "></script>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -623,6 +623,109 @@
             margin-bottom: 8px;
             display: block;
         }
+
+        /* NOVOS ESTILOS PARA GERENCIAMENTO DE CATEGORIAS */
+        .categoria-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-categoria {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        
+        .btn-categoria-add {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-categoria-add:hover {
+            background: #229954;
+        }
+        
+        .btn-categoria-del {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-categoria-del:hover {
+            background: #c0392b;
+        }
+        
+        .btn-categoria-del:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .categoria-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .categoria-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .categoria-tipo {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .categoria-tipo.despesa {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .categoria-tipo.receita {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .categoria-count {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .btn-small-delete {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-small-delete:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -633,6 +736,7 @@
             <div class="nav-tabs" id="navTabs">
                 <button class="nav-tab active" onclick="showTab('dashboard')">Dashboard</button>
                 <button class="nav-tab" onclick="showTab('lancamentos')">Lançamentos</button>
+                <button class="nav-tab" onclick="showTab('categorias')">Categorias</button>
                 <button class="nav-tab" onclick="showTab('sync')">Sincronizar</button>
                 <button class="nav-tab" onclick="openConfigModal()">Config</button>
             </div>
@@ -775,7 +879,12 @@
                     </div>
                 </div>
                 <div class="filter-group" style="margin-top: 12px;">
-                    <label>Categoria</label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label>Categoria</label>
+                        <button class="btn-categoria btn-categoria-add" onclick="openCategoriaModal()">
+                            <span>+</span> Nova Categoria
+                        </button>
+                    </div>
                     <div class="filter-buttons" id="cat-lancamento-filters">
                         <button class="filter-btn active" onclick="filterCatLancamento('TODOS', this)">TODOS</button>
                     </div>
@@ -814,6 +923,32 @@
                         </thead>
                         <tbody id="lancamentos-table"></tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- NOVA ABA DE CATEGORIAS -->
+        <div id="categorias-tab" class="hidden">
+            <div class="filters-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="color: #2c3e50;">📂 Gerenciar Categorias</h3>
+                    <button class="btn-categoria btn-categoria-add" onclick="openCategoriaModal()">
+                        <span>+</span> Nova Categoria
+                    </button>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Despesas</label>
+                    <div id="lista-categorias-despesa" style="margin-bottom: 20px;">
+                        <!-- Preenchido via JS -->
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Receitas</label>
+                    <div id="lista-categorias-receita">
+                        <!-- Preenchido via JS -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -868,6 +1003,7 @@
 
     <button class="fab" onclick="openModal()">+</button>
 
+    <!-- Modal de Lançamento -->
     <div class="modal" id="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -983,6 +1119,7 @@
         </div>
     </div>
 
+    <!-- Modal de Configuração de Vencimentos -->
     <div class="modal" id="config-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -995,6 +1132,43 @@
                 <button type="button" class="btn-cancel" onclick="closeConfigModal()">Cancelar</button>
                 <button type="button" class="btn-save" onclick="salvarConfiguracoes()">💾 Salvar</button>
             </div>
+        </div>
+    </div>
+
+    <!-- NOVO: Modal de Gerenciamento de Categorias -->
+    <div class="modal" id="categoria-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="categoria-modal-title">Nova Categoria</h3>
+                <button class="btn-close" onclick="closeCategoriaModal()">×</button>
+            </div>
+            <form id="form-categoria">
+                <input type="hidden" id="categoria-edit-id">
+                
+                <div class="form-group">
+                    <label>Nome da Categoria</label>
+                    <input type="text" id="nova-categoria-nome" placeholder="Ex: SUPERMERCADO" required style="text-transform: uppercase;">
+                </div>
+                
+                <div class="form-group">
+                    <label>Tipo</label>
+                    <select id="nova-categoria-tipo" required>
+                        <option value="Despesa">Despesa</option>
+                        <option value="Receita">Receita</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Dia de Vencimento Padrão (opcional)</label>
+                    <input type="number" id="nova-categoria-dia" min="1" max="31" placeholder="Ex: 15">
+                    <small style="color: #666; font-size: 12px;">Dia sugerido ao criar lançamentos nesta categoria</small>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeCategoriaModal()">Cancelar</button>
+                    <button type="submit" class="btn-save">Salvar Categoria</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -1105,9 +1279,13 @@
                 .catch(err => console.log('Erro:', err));
         }
 
-        // Dados
-        const CATEGORIAS_DESPESA = ['INTERNET', 'LUZ', 'AGUA', 'CARTAO EMPRESA ITAU', 'PIC ITAU', 'SEGURO DO CARRO', 'DIVIDA', 'SALÃO', 'COMIDA', 'SCOBINHO', 'TV', 'SEGURANCA CASA', 'ACADEMIA', 'CARRO', 'CARTAO NEON', 'CARTAO CREDITO NU', 'CARTAO CREDITO ITAU', 'CASA', 'COMPRAS', 'TELEFONE', 'VIAGEM', 'SAUDE', 'PRESENTE'];
-        const CATEGORIAS_RECEITA = ['SALARIO', 'RENDA EXTRA', 'INVESTIMENTO', 'OUTROS'];
+        // Dados - agora carrega do localStorage ou usa padrão
+        let CATEGORIAS_DESPESA = JSON.parse(localStorage.getItem('categoriasDespesa')) || 
+            ['INTERNET', 'LUZ', 'AGUA', 'CARTAO EMPRESA ITAU', 'PIC ITAU', 'SEGURO DO CARRO', 'DIVIDA', 'SALÃO', 'COMIDA', 'SCOBINHO', 'TV', 'SEGURANCA CASA', 'ACADEMIA', 'CARRO', 'CARTAO NEON', 'CARTAO CREDITO NU', 'CARTAO CREDITO ITAU', 'CASA', 'COMPRAS', 'TELEFONE', 'VIAGEM', 'SAUDE', 'PRESENTE'];
+        
+        let CATEGORIAS_RECEITA = JSON.parse(localStorage.getItem('categoriasReceita')) || 
+            ['SALARIO', 'RENDA EXTRA', 'INVESTIMENTO', 'OUTROS'];
+            
         const VENCIMENTOS_INICIAIS = {'INTERNET': 10, 'LUZ': 15, 'AGUA': 20, 'CARTAO EMPRESA ITAU': 8, 'PIC ITAU': 5, 'SEGURO DO CARRO': 12, 'TV': 10, 'TELEFONE': 12, 'ACADEMIA': 5, 'SALÃO': 25, 'CARTAO NEON': 7, 'CARTAO CREDITO NU': 15, 'CARTAO CREDITO ITAU': 10, 'CARRO': 20, 'SALARIO': 5, 'RENDA EXTRA': 15};
         const MESES = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
 
@@ -1120,6 +1298,18 @@
         let qrScanning = false;
         let qrCodeObj = null;
 
+        // FUNÇÕES AUXILIARES PARA DATAS (CORREÇÃO DOS BUGS)
+        function formatDateLocal(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function getMesFromDate(date) {
+            return MESES[date.getMonth()];
+        }
+
         function init() {
             criarBotoesCategorias();
             saveData();
@@ -1127,38 +1317,14 @@
             renderTable();
             updateCategorias();
             togglePagoField();
-        }
-
-        function criarBotoesCategorias() {
-            const containerDash = document.getElementById('cat-filters');
-            CATEGORIAS_DESPESA.forEach(cat => {
-                const btn = document.createElement('button');
-                btn.className = 'filter-btn';
-                btn.textContent = cat;
-                btn.onclick = function() { filterCategoria(cat, this); };
-                containerDash.appendChild(btn);
-            });
-            CATEGORIAS_RECEITA.forEach(cat => {
-                const btn = document.createElement('button');
-                btn.className = 'filter-btn';
-                btn.textContent = cat;
-                btn.onclick = function() { filterCategoria(cat, this); };
-                containerDash.appendChild(btn);
-            });
-
-            const containerLanc = document.getElementById('cat-lancamento-filters');
-            [...CATEGORIAS_DESPESA, ...CATEGORIAS_RECEITA].forEach(cat => {
-                const btn = document.createElement('button');
-                btn.className = 'filter-btn';
-                btn.textContent = cat;
-                btn.onclick = function() { filterCatLancamento(cat, this); };
-                containerLanc.appendChild(btn);
-            });
+            renderCategoriasList();
         }
 
         function saveData() {
             localStorage.setItem('lancamentos', JSON.stringify(lancamentos));
             localStorage.setItem('vencimentosConfig', JSON.stringify(vencimentosConfig));
+            localStorage.setItem('categoriasDespesa', JSON.stringify(CATEGORIAS_DESPESA));
+            localStorage.setItem('categoriasReceita', JSON.stringify(CATEGORIAS_RECEITA));
         }
 
         function formatMoney(value) {
@@ -1176,6 +1342,7 @@
 
             document.getElementById('dashboard-tab').classList.add('hidden');
             document.getElementById('lancamentos-tab').classList.add('hidden');
+            document.getElementById('categorias-tab').classList.add('hidden');
             document.getElementById('sync-tab').classList.add('hidden');
 
             if (tab === 'dashboard') {
@@ -1184,6 +1351,9 @@
             } else if (tab === 'lancamentos') {
                 document.getElementById('lancamentos-tab').classList.remove('hidden');
                 renderTable();
+            } else if (tab === 'categorias') {
+                document.getElementById('categorias-tab').classList.remove('hidden');
+                renderCategoriasList();
             } else if (tab === 'sync') {
                 document.getElementById('sync-tab').classList.remove('hidden');
             }
@@ -1238,6 +1408,118 @@
             filtros.search = document.getElementById('search-input').value.toLowerCase();
             renderTable();
         }
+
+        // NOVAS FUNÇÕES DE CATEGORIA
+        function renderCategoriasList() {
+            const containerDespesa = document.getElementById('lista-categorias-despesa');
+            const containerReceita = document.getElementById('lista-categorias-receita');
+            
+            containerDespesa.innerHTML = '';
+            containerReceita.innerHTML = '';
+            
+            // Renderiza despesas
+            CATEGORIAS_DESPESA.forEach((cat, index) => {
+                const count = lancamentos.filter(l => l.categoria === cat).length;
+                const item = document.createElement('div');
+                item.className = 'categoria-item';
+                item.innerHTML = `
+                    <div class="categoria-info">
+                        <span class="categoria-tipo despesa">Despesa</span>
+                        <div>
+                            <div style="font-weight: 600;">${cat}</div>
+                            <div class="categoria-count">${count} lançamento${count !== 1 ? 's' : ''}</div>
+                        </div>
+                    </div>
+                    <button class="btn-small btn-small-delete" onclick="deleteCategoria('Despesa', '${cat}', ${index})" ${count > 0 ? 'disabled title="Não pode excluir: existem lançamentos nesta categoria"' : ''}>
+                        🗑️ Excluir
+                    </button>
+                `;
+                containerDespesa.appendChild(item);
+            });
+            
+            // Renderiza receitas
+            CATEGORIAS_RECEITA.forEach((cat, index) => {
+                const count = lancamentos.filter(l => l.categoria === cat).length;
+                const item = document.createElement('div');
+                item.className = 'categoria-item';
+                item.innerHTML = `
+                    <div class="categoria-info">
+                        <span class="categoria-tipo receita">Receita</span>
+                        <div>
+                            <div style="font-weight: 600;">${cat}</div>
+                            <div class="categoria-count">${count} lançamento${count !== 1 ? 's' : ''}</div>
+                        </div>
+                    </div>
+                    <button class="btn-small btn-small-delete" onclick="deleteCategoria('Receita', '${cat}', ${index})" ${count > 0 ? 'disabled title="Não pode excluir: existem lançamentos nesta categoria"' : ''}>
+                        🗑️ Excluir
+                    </button>
+                `;
+                containerReceita.appendChild(item);
+            });
+        }
+
+        function openCategoriaModal() {
+            document.getElementById('categoria-modal').classList.add('active');
+            document.getElementById('categoria-modal-title').textContent = 'Nova Categoria';
+            document.getElementById('form-categoria').reset();
+            document.getElementById('categoria-edit-id').value = '';
+        }
+
+        function closeCategoriaModal() {
+            document.getElementById('categoria-modal').classList.remove('active');
+        }
+
+        function deleteCategoria(tipo, nome, index) {
+            const count = lancamentos.filter(l => l.categoria === nome).length;
+            if (count > 0) {
+                alert(`❌ Não é possível excluir a categoria "${nome}" porque existem ${count} lançamentos vinculados a ela.\\n\\nExclua os lançamentos primeiro ou mude a categoria deles.`);
+                return;
+            }
+            
+            if (confirm(`Tem certeza que deseja excluir a categoria "${nome}"?`)) {
+                if (tipo === 'Despesa') {
+                    CATEGORIAS_DESPESA.splice(index, 1);
+                } else {
+                    CATEGORIAS_RECEITA.splice(index, 1);
+                }
+                saveData();
+                criarBotoesCategorias();
+                renderCategoriasList();
+                updateCategorias();
+                alert(`✅ Categoria "${nome}" excluída com sucesso!`);
+            }
+        }
+
+        document.getElementById('form-categoria').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nome = document.getElementById('nova-categoria-nome').value.toUpperCase().trim();
+            const tipo = document.getElementById('nova-categoria-tipo').value;
+            const dia = parseInt(document.getElementById('nova-categoria-dia').value);
+            
+            // Verifica se já existe
+            const lista = tipo === 'Despesa' ? CATEGORIAS_DESPESA : CATEGORIAS_RECEITA;
+            if (lista.includes(nome)) {
+                alert('❌ Esta categoria já existe!');
+                return;
+            }
+            
+            // Adiciona
+            lista.push(nome);
+            lista.sort(); // Ordena alfabeticamente
+            
+            // Configura vencimento padrão se informado
+            if (dia && dia >= 1 && dia <= 31) {
+                vencimentosConfig[nome] = dia;
+            }
+            
+            saveData();
+            criarBotoesCategorias();
+            renderCategoriasList();
+            updateCategorias();
+            closeCategoriaModal();
+            alert(`✅ Categoria "${nome}" adicionada com sucesso!`);
+        });
 
         function openConfigModal() {
             const list = document.getElementById('config-list');
@@ -1296,9 +1578,9 @@
             const categoria = document.getElementById('categoria').value;
             const dataLancamento = document.getElementById('data').value;
             if (dataLancamento && vencimentosConfig[categoria]) {
-                const data = new Date(dataLancamento);
+                const data = new Date(dataLancamento + 'T12:00:00');
                 data.setDate(vencimentosConfig[categoria]);
-                document.getElementById('data-vencimento').value = data.toISOString().split('T')[0];
+                document.getElementById('data-vencimento').value = formatDateLocal(data);
             }
         }
 
@@ -1310,7 +1592,6 @@
             if (isParcelado) {
                 fields.classList.remove('hidden');
                 calcularParcelas();
-                // Desmarca recorrente se parcelado estiver marcado
                 recorrenteCheckbox.checked = false;
                 document.getElementById('recorrente-fields').classList.add('hidden');
             } else {
@@ -1325,10 +1606,8 @@
             
             if (isRecorrente) {
                 fields.classList.remove('hidden');
-                // Desmarca parcelado se recorrente estiver marcado
                 parceladoCheckbox.checked = false;
                 document.getElementById('parcelamento-fields').classList.add('hidden');
-                // Atualiza valor exibido
                 atualizarValorRecorrente();
             } else {
                 fields.classList.add('hidden');
@@ -1351,15 +1630,10 @@
             document.getElementById('parcelamento-info').innerHTML = `Cada parcela: <strong>${formatMoney(valor/qtd)}</strong> (${qtd}x)`;
         }
 
-        function getProximoMes(mesAtual, quantos) {
-            const idx = MESES.indexOf(mesAtual);
-            return MESES[(idx + quantos) % 12];
-        }
-
         function isAtrasado(l) {
             if (l.tipo !== 'Despesa' || l.pago || !l.dataVencimento) return false;
             const hoje = new Date(); hoje.setHours(0,0,0,0);
-            return new Date(l.dataVencimento) < hoje;
+            return new Date(l.dataVencimento + 'T12:00:00') < hoje;
         }
 
         function togglePago(id) {
@@ -1490,13 +1764,13 @@
                 if (isAtrasado(l)) tr.classList.add('linha-atrasada');
 
                 const pagoCheckbox = l.tipo === 'Despesa' ? `<input type="checkbox" class="pago-checkbox" ${l.pago ? 'checked' : ''} onchange="togglePago(${l.id})">` : '-';
-                const dataVenc = l.dataVencimento ? new Date(l.dataVencimento).toLocaleDateString('pt-BR') : '-';
+                const dataVenc = l.dataVencimento ? new Date(l.dataVencimento + 'T12:00:00').toLocaleDateString('pt-BR') : '-';
                 const recorrenteBadge = l.recorrente ? '<span class="recorrente-badge">🔁 FIXO</span>' : '';
                 const parcelaBadge = l.parcela ? `<small style="color: #666;">(${l.parcela}/${l.totalParcelas})</small>` : '';
 
                 tr.innerHTML = `
                     <td>${pagoCheckbox}</td>
-                    <td>${new Date(l.data).toLocaleDateString('pt-BR')}</td>
+                    <td>${new Date(l.data + 'T12:00:00').toLocaleDateString('pt-BR')}</td>
                     <td>${dataVenc}</td>
                     <td>${l.mes}</td>
                     <td>${l.descricao} ${recorrenteBadge} ${parcelaBadge}</td>
@@ -1509,6 +1783,37 @@
                     </td>
                 `;
                 tbody.appendChild(tr);
+            });
+        }
+
+        function criarBotoesCategorias() {
+            const containerDash = document.getElementById('cat-filters');
+            containerDash.innerHTML = '<button class="filter-btn active" onclick="filterCategoria(\\'TODOS\\', this)">TODOS</button>';
+            
+            CATEGORIAS_DESPESA.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.textContent = cat;
+                btn.onclick = function() { filterCategoria(cat, this); };
+                containerDash.appendChild(btn);
+            });
+            CATEGORIAS_RECEITA.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.textContent = cat;
+                btn.onclick = function() { filterCategoria(cat, this); };
+                containerDash.appendChild(btn);
+            });
+
+            const containerLanc = document.getElementById('cat-lancamento-filters');
+            containerLanc.innerHTML = '<button class="filter-btn active" onclick="filterCatLancamento(\\'TODOS\\', this)">TODOS</button>';
+            
+            [...CATEGORIAS_DESPESA, ...CATEGORIAS_RECEITA].forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.textContent = cat;
+                btn.onclick = function() { filterCatLancamento(cat, this); };
+                containerLanc.appendChild(btn);
             });
         }
 
@@ -1558,7 +1863,6 @@
             document.getElementById('valor').value = l.valor;
             document.getElementById('observacoes').value = l.observacoes || '';
             
-            // Oculta opções de parcelamento/recorrente na edição
             document.getElementById('is-parcelado').checked = false;
             document.getElementById('is-recorrente').checked = false;
             document.getElementById('parcelamento-fields').classList.add('hidden');
@@ -1574,6 +1878,7 @@
                 saveData();
                 renderTable();
                 updateDashboard();
+                renderCategoriasList(); // Atualiza contadores
             }
         }
 
@@ -1591,9 +1896,9 @@
             if (mes !== 'TODOS') dados = dados.filter(l => l.mes === mes);
             if (dados.length === 0) { alert('Nada para exportar!'); return; }
 
-            let csv = 'Data;Vencimento;Mes;Descricao;Tipo;Categoria;Valor;Pago;Parcela;Recorrente;Obs\n';
+            let csv = 'Data;Vencimento;Mes;Descricao;Tipo;Categoria;Valor;Pago;Parcela;Recorrente;Obs\\n';
             dados.forEach(l => {
-                csv += `${new Date(l.data).toLocaleDateString('pt-BR')};${l.dataVencimento ? new Date(l.dataVencimento).toLocaleDateString('pt-BR') : ''};${l.mes};${l.descricao};${l.tipo};${l.categoria};${l.valor.toFixed(2)};${l.tipo === 'Despesa' ? (l.pago ? 'SIM' : 'NAO') : '-'};${l.parcela || ''};${l.recorrente ? 'SIM' : 'NAO'};${(l.observacoes || '').replace(/;/g, ',')}\n`;
+                csv += `${new Date(l.data + 'T12:00:00').toLocaleDateString('pt-BR')};${l.dataVencimento ? new Date(l.dataVencimento + 'T12:00:00').toLocaleDateString('pt-BR') : ''};${l.mes};${l.descricao};${l.tipo};${l.categoria};${l.valor.toFixed(2)};${l.tipo === 'Despesa' ? (l.pago ? 'SIM' : 'NAO') : '-'};${l.parcela || ''};${l.recorrente ? 'SIM' : 'NAO'};${(l.observacoes || '').replace(/;/g, ',')}\\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1607,6 +1912,7 @@
             alert(`✅ ${dados.length} lançamentos exportados!`);
         }
 
+        // FORMULÁRIO DE LANÇAMENTO CORRIGIDO
         document.getElementById('form-lancamento').addEventListener('submit', function(e) {
             e.preventDefault();
             const id = document.getElementById('edit-id').value;
@@ -1646,14 +1952,22 @@
                     // SISTEMA DE PARCELAMENTO (divide o valor)
                     const qtd = parseInt(document.getElementById('qtd-parcelas').value);
                     const grupoId = Date.now();
+                    
+                    const dataBase = new Date(data + 'T12:00:00');
+                    const vencBase = new Date(venc + 'T12:00:00');
+                    
                     for (let i = 0; i < qtd; i++) {
-                        const dataObj = new Date(data); dataObj.setMonth(dataObj.getMonth() + i);
-                        const vencObj = new Date(venc); vencObj.setMonth(vencObj.getMonth() + i);
+                        const dataParcela = new Date(dataBase);
+                        dataParcela.setMonth(dataBase.getMonth() + i);
+                        
+                        const vencParcela = new Date(vencBase);
+                        vencParcela.setMonth(vencBase.getMonth() + i);
+                        
                         lancamentos.push({
                             id: grupoId + i, 
-                            data: dataObj.toISOString().split('T')[0],
-                            dataVencimento: vencObj.toISOString().split('T')[0],
-                            mes: getProximoMes(mes, i), 
+                            data: formatDateLocal(dataParcela),
+                            dataVencimento: formatDateLocal(vencParcela),
+                            mes: getMesFromDate(dataParcela), 
                             descricao: desc, 
                             tipo: tipo,
                             categoria: cat, 
@@ -1668,30 +1982,41 @@
                     alert(`✅ ${qtd} parcelas de ${formatMoney(valor/qtd)} criadas!`);
                     
                 } else if (isRecorrente) {
-                    // SISTEMA RECORRENTE (mesmo valor todo mês)
+                    // SISTEMA RECORRENTE CORRIGIDO ✅
                     const qtdMeses = parseInt(document.getElementById('meses-recorrentes').value);
                     const grupoId = Date.now();
                     
+                    const vencDate = new Date(venc + 'T12:00:00');
+                    const diaVencimento = vencDate.getDate();
+                    
+                    const dataBase = new Date(data + 'T12:00:00');
+                    const mesBase = dataBase.getMonth();
+                    const anoBase = dataBase.getFullYear();
+                    
                     for (let i = 0; i < qtdMeses; i++) {
-                        const dataObj = new Date(data); dataObj.setMonth(dataObj.getMonth() + i);
-                        const vencObj = new Date(venc); vencObj.setMonth(vencObj.getMonth() + i);
+                        const mesAlvo = mesBase + i;
+                        const dataLancamento = new Date(anoBase, mesBase + i, dataBase.getDate(), 12, 0, 0);
+                        
+                        const ultimoDiaDoMes = new Date(anoBase, mesAlvo + 1, 0).getDate();
+                        const diaVenc = Math.min(diaVencimento, ultimoDiaDoMes);
+                        const dataVencimento = new Date(anoBase, mesAlvo, diaVenc, 12, 0, 0);
                         
                         lancamentos.push({
                             id: grupoId + i, 
-                            data: dataObj.toISOString().split('T')[0],
-                            dataVencimento: vencObj.toISOString().split('T')[0],
-                            mes: getProximoMes(mes, i), 
+                            data: formatDateLocal(dataLancamento),
+                            dataVencimento: formatDateLocal(dataVencimento),
+                            mes: getMesFromDate(dataLancamento), 
                             descricao: desc, 
                             tipo: tipo,
                             categoria: cat, 
-                            valor: valor, // VALOR INTEGRAL REPETIDO
+                            valor: valor,
                             pago: i === 0 ? pago : false,
                             observacoes: i === 0 ? obs : '', 
                             recorrente: true,
                             grupoRecorrente: grupoId
                         });
                     }
-                    alert(`✅ ${qtdMeses} lançamentos recorrentes de ${formatMoney(valor)} criados!\n\nEx: Financiamento, Aluguel, Mensalidade`);
+                    alert(`✅ ${qtdMeses} lançamentos recorrentes de ${formatMoney(valor)} criados!`);
                     
                 } else {
                     // LANÇAMENTO NORMAL (único)
@@ -1746,7 +2071,9 @@
                 dataExportacao: new Date().toISOString(),
                 totalLancamentos: lancamentos.length,
                 lancamentos: lancamentos,
-                vencimentosConfig: vencimentosConfig
+                vencimentosConfig: vencimentosConfig,
+                categoriasDespesa: CATEGORIAS_DESPESA,
+                categoriasReceita: CATEGORIAS_RECEITA
             };
             
             const jsonStr = JSON.stringify(exportData);
@@ -1780,7 +2107,9 @@
                 app: 'Controle Financeiro',
                 totalLancamentos: lancamentos.length,
                 lancamentos: lancamentos,
-                vencimentosConfig: vencimentosConfig
+                vencimentosConfig: vencimentosConfig,
+                categoriasDespesa: CATEGORIAS_DESPESA,
+                categoriasReceita: CATEGORIAS_RECEITA
             };
 
             const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
@@ -1828,10 +2157,28 @@
             if (data.vencimentosConfig) {
                 Object.assign(vencimentosConfig, data.vencimentosConfig);
             }
+            
+            // Importa categorias também
+            if (data.categoriasDespesa) {
+                data.categoriasDespesa.forEach(cat => {
+                    if (!CATEGORIAS_DESPESA.includes(cat)) {
+                        CATEGORIAS_DESPESA.push(cat);
+                    }
+                });
+            }
+            if (data.categoriasReceita) {
+                data.categoriasReceita.forEach(cat => {
+                    if (!CATEGORIAS_RECEITA.includes(cat)) {
+                        CATEGORIAS_RECEITA.push(cat);
+                    }
+                });
+            }
 
             saveData();
+            criarBotoesCategorias();
             updateDashboard();
             renderTable();
+            renderCategoriasList();
             alert(`✅ ${count} lançamentos importados com sucesso!`);
         }
 
