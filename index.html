@@ -189,14 +189,13 @@
         
         @media (min-width: 1024px) { .charts-grid { grid-template-columns: 2fr 1fr; } }
         
-        /* CORREÇÃO: Altura fixa para os gráficos não crescerem infinitamente */
         .chart-container {
             background: white;
             padding: 16px;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             position: relative;
-            height: 400px; /* ALTURA FIXA */
+            height: 400px;
             overflow: hidden;
         }
         
@@ -211,13 +210,12 @@
             color: #2c3e50;
             padding-bottom: 8px;
             border-bottom: 2px solid #ecf0f1;
-            height: 40px; /* Altura fixa para o título não empurrar */
+            height: 40px;
         }
         
-        /* Container do canvas com altura controlada */
         .chart-wrapper {
             position: relative;
-            height: calc(100% - 50px); /* Subtrai o título */
+            height: calc(100% - 50px);
             width: 100%;
         }
         
@@ -343,6 +341,15 @@
         
         .tipo-badge.receita { background: #d4edda; color: #155724; }
         .tipo-badge.despesa { background: #f8d7da; color: #721c24; }
+        
+        .recorrente-badge {
+            background: #9b59b6;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            margin-left: 4px;
+        }
         
         .pago-checkbox {
             width: 24px;
@@ -599,6 +606,22 @@
             background: #f8f9fa;
             margin-bottom: 8px;
             border-radius: 8px;
+        }
+        
+        /* Opções de repetição */
+        .recorrente-options {
+            background: #f0f8ff;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .recorrente-options label {
+            color: #2980b9;
+            font-size: 13px;
+            margin-bottom: 8px;
+            display: block;
         }
     </style>
 </head>
@@ -885,7 +908,7 @@
 
                 <div class="form-group">
                     <label>Descrição</label>
-                    <input type="text" id="descricao" placeholder="Ex: TV, Celular..." required>
+                    <input type="text" id="descricao" placeholder="Ex: Financiamento Casa, Aluguel..." required>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
@@ -907,9 +930,10 @@
                     <input type="number" id="valor" step="0.01" placeholder="0,00" required oninput="if(document.getElementById('is-parcelado').checked) calcularParcelas()">
                 </div>
 
+                <!-- OPÇÃO DE PARCELAMENTO -->
                 <div class="checkbox-group">
                     <input type="checkbox" id="is-parcelado" onchange="toggleParcelamento()">
-                    <label for="is-parcelado">📦 É parcelado?</label>
+                    <label for="is-parcelado">📦 Parcelar valor (divide o total)</label>
                 </div>
 
                 <div class="parcelamento-fields hidden" id="parcelamento-fields" style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
@@ -922,6 +946,25 @@
                     </div>
                 </div>
 
+                <!-- OPÇÃO DE LANÇAMENTO RECORRENTE (NOVO) -->
+                <div class="checkbox-group" style="background: #e8f4f8; border: 2px solid #3498db;">
+                    <input type="checkbox" id="is-recorrente" onchange="toggleRecorrente()">
+                    <label for="is-recorrente">🔁 Lançamento Recorrente (Mensal Fixo)</label>
+                </div>
+
+                <div class="recorrente-options hidden" id="recorrente-fields">
+                    <label>📅 Gerar para quantos meses?</label>
+                    <select id="meses-recorrentes" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ddd;">
+                        <option value="3">Próximos 3 meses</option>
+                        <option value="6">Próximos 6 meses</option>
+                        <option value="12" selected>Próximos 12 meses (1 ano)</option>
+                        <option value="24">Próximos 24 meses (2 anos)</option>
+                    </select>
+                    <p style="font-size: 12px; color: #666; margin-top: 8px;">
+                        💡 O valor de <strong>R$ <span id="valor-recorrente">0,00</span></strong> será repetido todo mês
+                    </p>
+                </div>
+
                 <div class="checkbox-group" id="pago-field">
                     <input type="checkbox" id="is-pago">
                     <label for="is-pago">✅ Já está pago?</label>
@@ -929,7 +972,7 @@
 
                 <div class="form-group">
                     <label>Observações (opcional)</label>
-                    <textarea id="observacoes" rows="2" placeholder="Ex: Paguei no débito..."></textarea>
+                    <textarea id="observacoes" rows="2" placeholder="Ex: Financiamento bancário..."></textarea>
                 </div>
 
                 <div class="form-actions">
@@ -1047,7 +1090,7 @@
         // Service Worker
         if ('serviceWorker' in navigator) {
             const swCode = `
-                const CACHE_NAME = 'financeiro-v3';
+                const CACHE_NAME = 'financeiro-v4';
                 const urlsToCache = ['/financeiro/', '/financeiro/index.html'];
                 self.addEventListener('install', e => {
                     e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache)));
@@ -1071,15 +1114,7 @@
         let lancamentos = JSON.parse(localStorage.getItem('lancamentos')) || [];
         let vencimentosConfig = JSON.parse(localStorage.getItem('vencimentosConfig')) || {...VENCIMENTOS_INICIAIS};
         let filtros = {mes: 'TODOS', categoria: 'TODOS', tipoLancamento: 'TODOS', mesLancamento: 'TODOS', catLancamento: 'TODOS', status: 'TODOS', search: ''};
-        
-        // CORREÇÃO: Objeto para armazenar instâncias dos gráficos
-        let charts = {
-            saldo: null,
-            despesa: null,
-            receita: null,
-            comparativo: null
-        };
-        
+        let charts = { saldo: null, despesa: null, receita: null, comparativo: null };
         let currentExportFormat = 'json';
         let qrScannerStream = null;
         let qrScanning = false;
@@ -1270,13 +1305,45 @@
         function toggleParcelamento() {
             const isParcelado = document.getElementById('is-parcelado').checked;
             const fields = document.getElementById('parcelamento-fields');
+            const recorrenteCheckbox = document.getElementById('is-recorrente');
+            
             if (isParcelado) {
                 fields.classList.remove('hidden');
                 calcularParcelas();
+                // Desmarca recorrente se parcelado estiver marcado
+                recorrenteCheckbox.checked = false;
+                document.getElementById('recorrente-fields').classList.add('hidden');
             } else {
                 fields.classList.add('hidden');
             }
         }
+
+        function toggleRecorrente() {
+            const isRecorrente = document.getElementById('is-recorrente').checked;
+            const fields = document.getElementById('recorrente-fields');
+            const parceladoCheckbox = document.getElementById('is-parcelado');
+            
+            if (isRecorrente) {
+                fields.classList.remove('hidden');
+                // Desmarca parcelado se recorrente estiver marcado
+                parceladoCheckbox.checked = false;
+                document.getElementById('parcelamento-fields').classList.add('hidden');
+                // Atualiza valor exibido
+                atualizarValorRecorrente();
+            } else {
+                fields.classList.add('hidden');
+            }
+        }
+
+        function atualizarValorRecorrente() {
+            const valor = parseFloat(document.getElementById('valor').value) || 0;
+            document.getElementById('valor-recorrente').textContent = formatMoney(valor).replace('R$ ', '');
+        }
+
+        document.getElementById('valor').addEventListener('input', function() {
+            if (document.getElementById('is-parcelado').checked) calcularParcelas();
+            if (document.getElementById('is-recorrente').checked) atualizarValorRecorrente();
+        });
 
         function calcularParcelas() {
             const valor = parseFloat(document.getElementById('valor').value) || 0;
@@ -1305,7 +1372,6 @@
             }
         }
 
-        // CORREÇÃO PRINCIPAL: Função updateDashboard com destruição correta dos gráficos
         function updateDashboard() {
             const filtered = lancamentos.filter(l => {
                 if (filtros.mes !== 'TODOS' && l.mes !== filtros.mes) return false;
@@ -1335,27 +1401,13 @@
             let acumulado = 0;
             const saldoAcumulado = dadosPorMes.map(d => { acumulado += d.saldo; return acumulado; });
 
-            // CORREÇÃO: Destruir gráficos existentes antes de criar novos
-            if (charts.saldo) {
-                charts.saldo.destroy();
-                charts.saldo = null;
-            }
-            if (charts.despesa) {
-                charts.despesa.destroy();
-                charts.despesa = null;
-            }
-            if (charts.receita) {
-                charts.receita.destroy();
-                charts.receita = null;
-            }
-            if (charts.comparativo) {
-                charts.comparativo.destroy();
-                charts.comparativo = null;
-            }
+            if (charts.saldo) { charts.saldo.destroy(); charts.saldo = null; }
+            if (charts.despesa) { charts.despesa.destroy(); charts.despesa = null; }
+            if (charts.receita) { charts.receita.destroy(); charts.receita = null; }
+            if (charts.comparativo) { charts.comparativo.destroy(); charts.comparativo = null; }
 
             const isMobile = window.innerWidth < 768;
 
-            // Gráfico 1: Saldo
             const ctxSaldo = document.getElementById('saldoChart').getContext('2d');
             charts.saldo = new Chart(ctxSaldo, {
                 type: 'bar',
@@ -1369,83 +1421,50 @@
                 options: { 
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } } 
-                    },
-                    scales: { 
-                        x: { ticks: { font: { size: 10 } } }, 
-                        y: { ticks: { font: { size: 10 } } } 
-                    }
+                    plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } } },
+                    scales: { x: { ticks: { font: { size: 10 } } }, y: { ticks: { font: { size: 10 } } } }
                 }
             });
 
-            // Gráfico 2: Despesas por categoria
             const despesasPorCat = {};
             lancamentos.filter(l => l.tipo === 'Despesa').forEach(l => despesasPorCat[l.categoria] = (despesasPorCat[l.categoria] || 0) + l.valor);
 
             const ctxDespesa = document.getElementById('despesaChart').getContext('2d');
             charts.despesa = new Chart(ctxDespesa, { 
                 type: 'bar', 
-                data: { 
-                    labels: Object.keys(despesasPorCat), 
-                    datasets: [{ data: Object.values(despesasPorCat), backgroundColor: '#e74c3c' }] 
-                }, 
+                data: { labels: Object.keys(despesasPorCat), datasets: [{ data: Object.values(despesasPorCat), backgroundColor: '#e74c3c' }] }, 
                 options: { 
                     indexAxis: 'y', 
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
-                    scales: { 
-                        y: { ticks: { font: { size: 9 } } }, 
-                        x: { ticks: { font: { size: 9 } } } 
-                    }
+                    scales: { y: { ticks: { font: { size: 9 } } }, x: { ticks: { font: { size: 9 } } } }
                 } 
             });
 
-            // Gráfico 3: Receitas
             const receitasPorCat = {};
             lancamentos.filter(l => l.tipo === 'Receita').forEach(l => receitasPorCat[l.categoria] = (receitasPorCat[l.categoria] || 0) + l.valor);
 
             const ctxReceita = document.getElementById('receitaChart').getContext('2d');
             charts.receita = new Chart(ctxReceita, { 
                 type: 'doughnut', 
-                data: { 
-                    labels: Object.keys(receitasPorCat), 
-                    datasets: [{ 
-                        data: Object.values(receitasPorCat), 
-                        backgroundColor: ['#1abc9c', '#16a085', '#2ecc71', '#27ae60'] 
-                    }] 
-                }, 
+                data: { labels: Object.keys(receitasPorCat), datasets: [{ data: Object.values(receitasPorCat), backgroundColor: ['#1abc9c', '#16a085', '#2ecc71', '#27ae60'] }] }, 
                 options: { 
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } 
-                    } 
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } } 
                 } 
             });
 
-            // Gráfico 4: Comparativo
             const ctxComp = document.getElementById('comparativoChart').getContext('2d');
             charts.comparativo = new Chart(ctxComp, { 
                 type: 'bar', 
-                data: { 
-                    labels: MESES, 
-                    datasets: [
-                        { label: 'Receitas', data: dadosPorMes.map(d => d.receita), backgroundColor: '#1abc9c' }, 
-                        { label: 'Despesas', data: dadosPorMes.map(d => d.despesa), backgroundColor: '#e74c3c' }
-                    ] 
-                }, 
+                data: { labels: MESES, datasets: [{ label: 'Receitas', data: dadosPorMes.map(d => d.receita), backgroundColor: '#1abc9c' }, { label: 'Despesas', data: dadosPorMes.map(d => d.despesa), backgroundColor: '#e74c3c' }] }, 
                 options: { 
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } } 
-                    },
-                    scales: { 
-                        x: { ticks: { font: { size: 10 } } }, 
-                        y: { ticks: { font: { size: 10 } } } 
-                    }
+                    plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } } },
+                    scales: { x: { ticks: { font: { size: 10 } } }, y: { ticks: { font: { size: 10 } } } }
                 } 
             });
         }
@@ -1472,13 +1491,15 @@
 
                 const pagoCheckbox = l.tipo === 'Despesa' ? `<input type="checkbox" class="pago-checkbox" ${l.pago ? 'checked' : ''} onchange="togglePago(${l.id})">` : '-';
                 const dataVenc = l.dataVencimento ? new Date(l.dataVencimento).toLocaleDateString('pt-BR') : '-';
+                const recorrenteBadge = l.recorrente ? '<span class="recorrente-badge">🔁 FIXO</span>' : '';
+                const parcelaBadge = l.parcela ? `<small style="color: #666;">(${l.parcela}/${l.totalParcelas})</small>` : '';
 
                 tr.innerHTML = `
                     <td>${pagoCheckbox}</td>
                     <td>${new Date(l.data).toLocaleDateString('pt-BR')}</td>
                     <td>${dataVenc}</td>
                     <td>${l.mes}</td>
-                    <td>${l.descricao} ${l.parcela ? `<small style="color: #666;">(${l.parcela}/${l.totalParcelas})</small>` : ''}</td>
+                    <td>${l.descricao} ${recorrenteBadge} ${parcelaBadge}</td>
                     <td><span class="tipo-badge ${l.tipo.toLowerCase()}">${l.tipo}</span></td>
                     <td>${l.categoria}</td>
                     <td class="${l.tipo === 'Receita' ? 'valor-receita' : 'valor-despesa'}">${formatMoney(l.valor)}</td>
@@ -1512,6 +1533,7 @@
             document.getElementById('edit-id').value = '';
             document.getElementById('data').valueAsDate = new Date();
             document.getElementById('parcelamento-fields').classList.add('hidden');
+            document.getElementById('recorrente-fields').classList.add('hidden');
             updateCategorias();
             togglePagoField();
         }
@@ -1535,6 +1557,13 @@
             document.getElementById('categoria').value = l.categoria;
             document.getElementById('valor').value = l.valor;
             document.getElementById('observacoes').value = l.observacoes || '';
+            
+            // Oculta opções de parcelamento/recorrente na edição
+            document.getElementById('is-parcelado').checked = false;
+            document.getElementById('is-recorrente').checked = false;
+            document.getElementById('parcelamento-fields').classList.add('hidden');
+            document.getElementById('recorrente-fields').classList.add('hidden');
+            
             togglePagoField();
             if (l.tipo === 'Despesa') document.getElementById('is-pago').checked = l.pago || false;
         }
@@ -1562,9 +1591,9 @@
             if (mes !== 'TODOS') dados = dados.filter(l => l.mes === mes);
             if (dados.length === 0) { alert('Nada para exportar!'); return; }
 
-            let csv = 'Data;Vencimento;Mes;Descricao;Tipo;Categoria;Valor;Pago;Parcela;Obs\n';
+            let csv = 'Data;Vencimento;Mes;Descricao;Tipo;Categoria;Valor;Pago;Parcela;Recorrente;Obs\n';
             dados.forEach(l => {
-                csv += `${new Date(l.data).toLocaleDateString('pt-BR')};${l.dataVencimento ? new Date(l.dataVencimento).toLocaleDateString('pt-BR') : ''};${l.mes};${l.descricao};${l.tipo};${l.categoria};${l.valor.toFixed(2)};${l.tipo === 'Despesa' ? (l.pago ? 'SIM' : 'NAO') : '-'};${l.parcela || ''};${(l.observacoes || '').replace(/;/g, ',')}\n`;
+                csv += `${new Date(l.data).toLocaleDateString('pt-BR')};${l.dataVencimento ? new Date(l.dataVencimento).toLocaleDateString('pt-BR') : ''};${l.mes};${l.descricao};${l.tipo};${l.categoria};${l.valor.toFixed(2)};${l.tipo === 'Despesa' ? (l.pago ? 'SIM' : 'NAO') : '-'};${l.parcela || ''};${l.recorrente ? 'SIM' : 'NAO'};${(l.observacoes || '').replace(/;/g, ',')}\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1583,6 +1612,7 @@
             const id = document.getElementById('edit-id').value;
 
             if (id) {
+                // EDIÇÃO: Apenas atualiza o lançamento existente
                 const idx = lancamentos.findIndex(l => l.id === parseInt(id));
                 const l = lancamentos[idx];
                 lancamentos[idx] = {
@@ -1595,10 +1625,13 @@
                     valor: parseFloat(document.getElementById('valor').value),
                     pago: document.getElementById('tipo').value === 'Despesa' ? document.getElementById('is-pago').checked : false,
                     observacoes: document.getElementById('observacoes').value,
-                    parcela: l.parcela, totalParcelas: l.totalParcelas
+                    parcela: l.parcela, totalParcelas: l.totalParcelas,
+                    recorrente: l.recorrente || false
                 };
             } else {
+                // NOVO LANÇAMENTO
                 const isParcelado = document.getElementById('is-parcelado').checked;
+                const isRecorrente = document.getElementById('is-recorrente').checked;
                 const desc = document.getElementById('descricao').value;
                 const tipo = document.getElementById('tipo').value;
                 const cat = document.getElementById('categoria').value;
@@ -1610,25 +1643,70 @@
                 const obs = document.getElementById('observacoes').value;
 
                 if (isParcelado) {
+                    // SISTEMA DE PARCELAMENTO (divide o valor)
                     const qtd = parseInt(document.getElementById('qtd-parcelas').value);
                     const grupoId = Date.now();
                     for (let i = 0; i < qtd; i++) {
                         const dataObj = new Date(data); dataObj.setMonth(dataObj.getMonth() + i);
                         const vencObj = new Date(venc); vencObj.setMonth(vencObj.getMonth() + i);
                         lancamentos.push({
-                            id: grupoId + i, data: dataObj.toISOString().split('T')[0],
+                            id: grupoId + i, 
+                            data: dataObj.toISOString().split('T')[0],
                             dataVencimento: vencObj.toISOString().split('T')[0],
-                            mes: getProximoMes(mes, i), descricao: desc, tipo: tipo,
-                            categoria: cat, valor: valor / qtd, pago: i === 0 ? pago : false,
-                            observacoes: i === 0 ? obs : '', parcela: i + 1, totalParcelas: qtd
+                            mes: getProximoMes(mes, i), 
+                            descricao: desc, 
+                            tipo: tipo,
+                            categoria: cat, 
+                            valor: valor / qtd, 
+                            pago: i === 0 ? pago : false,
+                            observacoes: i === 0 ? obs : '', 
+                            parcela: i + 1, 
+                            totalParcelas: qtd,
+                            recorrente: false
                         });
                     }
-                    alert(`✅ ${qtd} parcelas criadas!`);
+                    alert(`✅ ${qtd} parcelas de ${formatMoney(valor/qtd)} criadas!`);
+                    
+                } else if (isRecorrente) {
+                    // SISTEMA RECORRENTE (mesmo valor todo mês)
+                    const qtdMeses = parseInt(document.getElementById('meses-recorrentes').value);
+                    const grupoId = Date.now();
+                    
+                    for (let i = 0; i < qtdMeses; i++) {
+                        const dataObj = new Date(data); dataObj.setMonth(dataObj.getMonth() + i);
+                        const vencObj = new Date(venc); vencObj.setMonth(vencObj.getMonth() + i);
+                        
+                        lancamentos.push({
+                            id: grupoId + i, 
+                            data: dataObj.toISOString().split('T')[0],
+                            dataVencimento: vencObj.toISOString().split('T')[0],
+                            mes: getProximoMes(mes, i), 
+                            descricao: desc, 
+                            tipo: tipo,
+                            categoria: cat, 
+                            valor: valor, // VALOR INTEGRAL REPETIDO
+                            pago: i === 0 ? pago : false,
+                            observacoes: i === 0 ? obs : '', 
+                            recorrente: true,
+                            grupoRecorrente: grupoId
+                        });
+                    }
+                    alert(`✅ ${qtdMeses} lançamentos recorrentes de ${formatMoney(valor)} criados!\n\nEx: Financiamento, Aluguel, Mensalidade`);
+                    
                 } else {
+                    // LANÇAMENTO NORMAL (único)
                     lancamentos.push({
-                        id: Date.now(), data: data, dataVencimento: venc, mes: mes,
-                        descricao: desc, tipo: tipo, categoria: cat, valor: valor,
-                        pago: pago, observacoes: obs
+                        id: Date.now(), 
+                        data: data, 
+                        dataVencimento: venc, 
+                        mes: mes,
+                        descricao: desc, 
+                        tipo: tipo, 
+                        categoria: cat, 
+                        valor: valor,
+                        pago: pago, 
+                        observacoes: obs,
+                        recorrente: false
                     });
                 }
             }
