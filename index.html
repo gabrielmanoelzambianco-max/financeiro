@@ -2,584 +2,621 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controle Financeiro - Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Financeiro">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <title>Controle Financeiro</title>
+    
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%2327ae60' width='192' height='192' rx='30'/%3E%3Ctext x='96' y='130' font-size='100' text-anchor='middle'%3E💰%3C/text%3E%3C/svg%3E">
+    
+    <link rel="manifest" href='data:application/json;base64,eyJuYW1lIjoiQ29udHJvbGUgRmluYW5jZWlybyIsInNob3J0X25hbWUiOiJGaW5hbmNlaXJvIiwic3RhcnRfdXJsIjoiL2luZGV4Lmh0bWwiLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjZjVmNWY1IiwidGhlbWVfY29sb3IiOiIjMmMzZTUwIiwib3JpZW50YXRpb24iOiJwb3J0cmFpdCIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnJTIweG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyUyMHZpZXdCb3g9JzAlMjAwJTIwMTkyJTIwMTkyJyUzRSUzQ3JlY3QlMjBmaWxsPSclMjMyN2FlNjAlMjclMjB3aWR0aD0nMTkyJyUyMGhlaWdodD0nMTkyJyUyMHJ4PSczMCcvJTNFJTNDdGV4dCUyMHg9Jzk2JyUyMHk9JzEzMCclMjBmb250LXNpemU9JzEwMCclMjB0ZXh0LWFuY2hvcj0nbWlkZGxlJyUzRSVDMiU5MiVDMiVBNSUzQyUyRnRleHQlM0UlM0MlMkZzdmclM0UiLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0='>
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- QR Code Library mais confiável -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { touch-action: manipulation; }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f5f5f5;
             color: #333;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
-
+        
         .header {
             background: #2c3e50;
             color: white;
-            padding: 15px 30px;
+            padding: 12px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 1400px;
+            margin: 0 auto;
         }
-
+        
         .header h1 {
-            font-size: 24px;
+            font-size: 18px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            margin: 0;
         }
-
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            min-width: 44px;
+            min-height: 44px;
+        }
+        
         .nav-tabs {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
-
+        
         .nav-tab {
-            padding: 10px 20px;
-            background: #34495e;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.1);
             border: none;
             color: white;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 8px;
             transition: all 0.3s;
             font-size: 14px;
+            font-weight: 500;
+            min-height: 44px;
         }
-
-        .nav-tab:hover, .nav-tab.active {
-            background: #3498db;
-        }
-
+        
+        .nav-tab:hover, .nav-tab.active { background: #3498db; }
+        
         .container {
             max-width: 1400px;
-            margin: 20px auto;
-            padding: 0 20px;
+            margin: 0 auto;
+            padding: 16px;
+            padding-bottom: 80px;
         }
-
-        /* FILTROS - CORRIGIDO */
+        
         .filters-section {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
-
-        .filter-group {
-            margin-bottom: 15px;
-        }
-
+        
+        .filter-group { margin-bottom: 12px; }
+        
         .filter-group label {
             display: block;
             margin-bottom: 8px;
-            font-weight: bold;
+            font-weight: 600;
             color: #555;
             font-size: 13px;
             text-transform: uppercase;
         }
-
+        
         .filter-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
-
+        
         .filter-btn {
-            padding: 8px 16px;
-            border: 2px solid #ddd;
+            padding: 10px 16px;
+            border: 2px solid #e0e0e0;
             background: white;
             color: #333;
             cursor: pointer;
             border-radius: 20px;
-            transition: all 0.3s;
-            font-size: 12px;
+            transition: all 0.2s;
+            font-size: 13px;
             font-weight: 500;
+            min-height: 44px;
         }
-
-        .filter-btn:hover {
-            background: #f0f0f0;
-        }
-
-        /* CORES ESPECÍFICAS PARA CADA TIPO */
-        .filter-btn.active {
-            background: #3498db;
-            color: white;
-            border-color: #3498db;
-        }
-
-        .filter-btn.despesa-btn.active {
-            background: #e74c3c !important;
-            border-color: #e74c3c !important;
-            color: white !important;
-        }
-
-        .filter-btn.receita-btn.active {
-            background: #27ae60 !important;
-            border-color: #27ae60 !important;
-            color: white !important;
-        }
-
-        .filter-btn.pendente-btn.active {
-            background: #f39c12 !important;
-            border-color: #f39c12 !important;
-            color: white !important;
-        }
-
-        .filter-btn.pago-btn.active {
-            background: #27ae60 !important;
-            border-color: #27ae60 !important;
-            color: white !important;
-        }
-
-        .filter-btn.atrasado-btn.active {
-            background: #dc3545 !important;
-            border-color: #dc3545 !important;
-            color: white !important;
-        }
-
-        /* CARDS */
+        
+        .filter-btn:active { transform: scale(0.95); }
+        .filter-btn.active { background: #3498db; color: white; border-color: #3498db; }
+        .filter-btn.despesa-btn.active { background: #e74c3c !important; border-color: #e74c3c !important; }
+        .filter-btn.receita-btn.active { background: #27ae60 !important; border-color: #27ae60 !important; }
+        
         .summary-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
         }
-
+        
+        @media (min-width: 768px) {
+            .summary-cards { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+        }
+        
         .card {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             text-align: center;
-            border-top: 5px solid;
+            border-top: 4px solid;
         }
-
+        
         .card.despesa { border-color: #e74c3c; }
         .card.receita { border-color: #27ae60; }
         .card.saldo { border-color: #3498db; }
         .card.pendente { border-color: #f39c12; }
         .card.alerta { border-color: #dc3545; }
-
-        .card-icon { font-size: 28px; margin-bottom: 8px; }
-        .card-title { font-size: 12px; color: #777; text-transform: uppercase; margin-bottom: 8px; }
-        .card-value { font-size: 24px; font-weight: bold; }
-        .card small { display: block; font-size: 11px; color: #999; margin-top: 5px; }
-
+        
+        .card-icon { font-size: 24px; margin-bottom: 4px; }
+        .card-title { font-size: 11px; color: #777; text-transform: uppercase; margin-bottom: 4px; font-weight: 600; }
+        .card-value { font-size: 18px; font-weight: bold; word-break: break-all; }
+        .card small { display: block; font-size: 10px; color: #999; margin-top: 2px; }
+        
+        @media (min-width: 768px) { .card-value { font-size: 24px; } }
+        
         .card.despesa .card-value { color: #e74c3c; }
         .card.receita .card-value { color: #27ae60; }
         .card.saldo .card-value { color: #3498db; }
         .card.pendente .card-value { color: #f39c12; }
         .card.alerta .card-value { color: #dc3545; }
-
-        /* RESTO DO CSS... */
-        .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px; }
-        .chart-container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .chart-title { font-size: 16px; font-weight: bold; margin-bottom: 15px; color: #2c3e50; padding-bottom: 10px; border-bottom: 2px solid #ecf0f1; }
-        .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-
-        .table-container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-
-        .search-box { display: flex; align-items: center; background: #f8f9fa; border: 2px solid #ddd; border-radius: 25px; padding: 8px 15px; min-width: 250px; }
-        .search-box input { border: none; background: transparent; outline: none; width: 100%; margin-left: 8px; font-size: 14px; }
-
-        .btn-add { background: #27ae60; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; }
-        .btn-add:hover { background: #229954; }
-        .btn-export { background: #17a2b8; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 8px; }
-        .btn-export:hover { background: #138496; }
-        .btn-config { background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 13px; }
-        .btn-config:hover { background: #5a6268; }
-
-        /* BOTÕES DE SINCRONIZAÇÃO */
-        .btn-sync {
-            background: #9b59b6;
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        @media (min-width: 1024px) { .charts-grid { grid-template-columns: 2fr 1fr; } }
+        
+        /* CORREÇÃO: Altura fixa para os gráficos não crescerem infinitamente */
+        .chart-container {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: relative;
+            height: 400px; /* ALTURA FIXA */
+            overflow: hidden;
+        }
+        
+        @media (max-width: 768px) {
+            .chart-container { height: 350px; }
+        }
+        
+        .chart-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #2c3e50;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ecf0f1;
+            height: 40px; /* Altura fixa para o título não empurrar */
+        }
+        
+        /* Container do canvas com altura controlada */
+        .chart-wrapper {
+            position: relative;
+            height: calc(100% - 50px); /* Subtrai o título */
+            width: 100%;
+        }
+        
+        canvas {
+            max-height: 100% !important;
+            width: 100% !important;
+        }
+        
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        @media (min-width: 768px) { .charts-row { grid-template-columns: 1fr 1fr; } }
+        
+        .table-container {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow-x: auto;
+        }
+        
+        .table-header {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        @media (min-width: 768px) {
+            .table-header { flex-direction: row; justify-content: space-between; align-items: center; }
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            padding: 10px 16px;
+            width: 100%;
+        }
+        
+        @media (min-width: 768px) { .search-box { min-width: 250px; width: auto; } }
+        
+        .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            margin-left: 8px;
+            font-size: 16px;
+        }
+        
+        .btn-add {
+            background: #27ae60;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 14px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 600;
+            min-height: 48px;
+            width: 100%;
+        }
+        
+        @media (min-width: 768px) { .btn-add { width: auto; } }
+        
+        .btn-export {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 13px;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            transition: all 0.3s;
+            min-height: 48px;
+            font-weight: 600;
         }
-        .btn-sync:hover { background: #8e44ad; transform: translateY(-2px); }
-
-        .btn-sync-mobile {
-            background: #e67e22;
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        
+        th, td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 14px;
+        }
+        
+        th {
+            background: #34495e;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            white-space: nowrap;
         }
-        .btn-sync-mobile:hover { background: #d35400; transform: translateY(-2px); }
-
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ecf0f1; }
-        th { background: #34495e; color: white; font-weight: 600; font-size: 12px; text-transform: uppercase; }
-        tr:hover { background: #f8f9fa; }
-
-        .tipo-badge { padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+        
+        .tipo-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+            white-space: nowrap;
+        }
+        
         .tipo-badge.receita { background: #d4edda; color: #155724; }
         .tipo-badge.despesa { background: #f8d7da; color: #721c24; }
-
-        .pago-checkbox { width: 20px; height: 20px; cursor: pointer; accent-color: #27ae60; }
+        
+        .pago-checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: #27ae60;
+        }
+        
         .linha-pago { opacity: 0.6; background: #f0f0f0; }
         .linha-pago td { text-decoration: line-through; color: #999; }
         .linha-atrasada { background: #fff5f5; }
         .linha-atrasada td { color: #dc3545; }
-
+        
         .valor-receita { color: #27ae60; font-weight: bold; }
         .valor-despesa { color: #e74c3c; font-weight: bold; }
-
-        .btn-action { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; margin-right: 5px; }
+        
+        .btn-action {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 4px;
+            min-height: 40px;
+            min-width: 40px;
+        }
+        
         .btn-edit { background: #f39c12; color: white; }
         .btn-delete { background: #e74c3c; color: white; }
-
-        /* MODAL */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
-        .modal.active { display: flex; }
-        .modal-content { background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
-        .modal-content.large { max-width: 700px; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .modal-title { font-size: 20px; color: #2c3e50; }
-        .btn-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #777; }
-
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #555; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 14px; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #3498db; }
-
-        .checkbox-group { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-        .checkbox-group input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
-        .checkbox-group label { margin: 0; cursor: pointer; font-weight: 600; color: #555; }
-
-        .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
-        .btn-save { background: #27ae60; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; }
-        .btn-cancel { background: #95a5a6; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; }
-
-        .config-list { max-height: 400px; overflow-y: auto; margin-bottom: 20px; }
-        .config-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; background: #f8f9fa; margin-bottom: 5px; border-radius: 5px; }
-        .config-item input { width: 70px; text-align: center; padding: 5px; border: 1px solid #ddd; border-radius: 3px; }
-
-        .hidden { display: none !important; }
-
-        /* ESTILOS PARA SINCRONIZAÇÃO */
-        .sync-info {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .sync-info h3 {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .sync-info ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .sync-info li {
-            padding: 5px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .sync-info li::before {
-            content: "✓";
-            background: rgba(255,255,255,0.2);
-            width: 20px;
-            height: 20px;
+        
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
+            background: #27ae60;
+            color: white;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+        
+        @media (max-width: 768px) {
+            .fab { display: flex; }
+            .desktop-only { display: none; }
+            .menu-toggle { display: block; }
+            .nav-tabs { display: none; position: absolute; top: 60px; left: 0; right: 0; background: #2c3e50; padding: 10px; flex-direction: column; }
+            .nav-tabs.active { display: flex; }
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            justify-content: center;
+            align-items: flex-end;
+        }
+        
+        @media (min-width: 768px) { .modal { align-items: center; } }
+        
+        .modal.active { display: flex; }
+        
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 20px 20px 0 0;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @media (min-width: 768px) {
+            .modal-content {
+                border-radius: 12px;
+                animation: fadeIn 0.3s ease-out;
+            }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-title { font-size: 20px; color: #2c3e50; font-weight: bold; }
+        
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #777;
+            min-width: 44px;
+            min-height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
         }
-
-        .sync-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .sync-card {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
-            transition: transform 0.3s;
-        }
-
-        .sync-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .sync-card h4 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-
-        .sync-card .icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .sync-card.celular-pc .icon { color: #3498db; }
-        .sync-card.pc-celular .icon { color: #e67e22; }
-
-        .sync-steps {
-            text-align: left;
-            margin: 15px 0;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            font-size: 13px;
-        }
-
-        .sync-steps ol {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        .sync-steps li {
-            margin-bottom: 8px;
+        
+        .form-group { margin-bottom: 16px; }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
             color: #555;
+            font-size: 14px;
         }
-
-        .btn-sync-action {
+        
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 12px;
-            border: none;
+            border: 2px solid #e0e0e0;
             border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 16px;
+            -webkit-appearance: none;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
             cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
         }
-
-        .btn-exportar {
-            background: #3498db;
-            color: white;
+        
+        .checkbox-group label { margin: 0; cursor: pointer; font-weight: 600; }
+        
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #eee;
         }
-        .btn-exportar:hover { background: #2980b9; }
-
-        .btn-importar {
+        
+        @media (max-width: 768px) {
+            .form-actions { flex-direction: column-reverse; }
+            .form-actions button { width: 100%; justify-content: center; }
+        }
+        
+        .btn-save {
             background: #27ae60;
             color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            min-height: 48px;
         }
-        .btn-importar:hover { background: #229954; }
-
-        .btn-ler-qr {
-            background: #9b59b6;
+        
+        .btn-cancel {
+            background: #95a5a6;
             color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            min-height: 48px;
         }
-        .btn-ler-qr:hover { background: #8e44ad; }
-
-        /* QR CODE DISPLAY - CORRIGIDO */
+        
+        .sync-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        @media (min-width: 768px) { .sync-options { grid-template-columns: 1fr 1fr; } }
+        
+        .sync-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        
+        .sync-card .icon { font-size: 40px; margin-bottom: 12px; }
+        
+        .btn-sync-action {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+            min-height: 48px;
+        }
+        
         .qr-display {
             text-align: center;
             padding: 20px;
             background: #f8f9fa;
-            border-radius: 10px;
-            margin: 15px 0;
-            min-height: 300px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            border-radius: 12px;
+            margin: 16px 0;
         }
-
-        .qr-display canvas, .qr-display img {
-            margin: 10px auto;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            background: white;
-            padding: 10px;
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .file-input-wrapper input[type=file] {
-            position: absolute;
-            left: -9999px;
-        }
-
-        .file-input-label {
-            display: block;
-            padding: 12px;
-            background: #ecf0f1;
-            border: 2px dashed #bdc3c7;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .file-input-label:hover {
-            background: #e0e0e0;
-            border-color: #95a5a6;
-        }
-
-        .conflict-list {
-            max-height: 300px;
-            overflow-y: auto;
-            margin: 15px 0;
-        }
-
-        .conflict-item {
+        
+        .hidden { display: none !important; }
+        
+        .config-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 12px;
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 8px;
-            margin-bottom: 8px;
-        }
-
-        .conflict-item.resolved {
-            background: #d4edda;
-            border-color: #c3e6cb;
-        }
-
-        .conflict-actions {
-            display: flex;
-            gap: 5px;
-        }
-
-        .btn-conflict {
-            padding: 5px 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 11px;
-        }
-
-        .btn-keep-local { background: #3498db; color: white; }
-        .btn-keep-imported { background: #e74c3c; color: white; }
-        .btn-keep-both { background: #27ae60; color: white; }
-
-        .sync-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .stat-box {
-            text-align: center;
-            padding: 10px;
+            border-bottom: 1px solid #eee;
             background: #f8f9fa;
+            margin-bottom: 8px;
             border-radius: 8px;
-        }
-
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
-        .stat-label {
-            font-size: 11px;
-            color: #7f8c8d;
-            text-transform: uppercase;
-        }
-
-        .video-preview {
-            width: 100%;
-            max-width: 400px;
-            margin: 15px auto;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 3px solid #3498db;
-        }
-
-        .video-preview video {
-            width: 100%;
-            display: block;
-        }
-
-        /* Toggle buttons */
-        .format-toggle {
-            display: flex;
-            background: #f0f0f0;
-            border-radius: 25px;
-            padding: 4px;
-            margin-bottom: 20px;
-        }
-
-        .format-toggle button {
-            flex: 1;
-            padding: 10px 20px;
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            border-radius: 20px;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-
-        .format-toggle button.active {
-            background: #3498db;
-            color: white;
-        }
-
-        @media (max-width: 768px) {
-            .charts-grid, .charts-row { grid-template-columns: 1fr; }
-            .summary-cards { grid-template-columns: repeat(2, 1fr); }
-            .table-header { flex-direction: column; align-items: stretch; }
-            .search-box { min-width: 100%; }
-            .sync-options { grid-template-columns: 1fr; }
-            .sync-stats { grid-template-columns: 1fr; }
         }
     </style>
-<base target="_blank">
 </head>
 <body>
     <div class="header">
-        <h1>📊 CONTROLE FINANCEIRO</h1>
-        <div class="nav-tabs">
-            <button class="nav-tab active" onclick="showTab('dashboard')">Dashboard</button>
-            <button class="nav-tab" onclick="showTab('lancamentos')">Lançamentos</button>
-            <button class="nav-tab" onclick="showTab('sync')">🔄 Sincronizar</button>
-            <button class="nav-tab" onclick="openConfigModal()">⚙️ Config</button>
+        <div class="header-content">
+            <h1>💰 Controle Financeiro</h1>
+            <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+            <div class="nav-tabs" id="navTabs">
+                <button class="nav-tab active" onclick="showTab('dashboard')">Dashboard</button>
+                <button class="nav-tab" onclick="showTab('lancamentos')">Lançamentos</button>
+                <button class="nav-tab" onclick="showTab('sync')">Sincronizar</button>
+                <button class="nav-tab" onclick="openConfigModal()">Config</button>
+            </div>
         </div>
     </div>
 
     <div class="container">
-        <!-- DASHBOARD -->
         <div id="dashboard-tab">
             <div class="filters-section">
                 <div class="filter-group">
@@ -641,24 +678,32 @@
             <div class="charts-grid">
                 <div class="chart-container">
                     <div class="chart-title">📊 Análise de Saldo</div>
-                    <canvas id="saldoChart"></canvas>
+                    <div class="chart-wrapper">
+                        <canvas id="saldoChart"></canvas>
+                    </div>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div style="display: flex; flex-direction: column; gap: 16px;">
                     <div class="chart-container">
                         <div class="chart-title">📊 Distribuição de Despesas</div>
-                        <canvas id="despesaChart"></canvas>
+                        <div class="chart-wrapper">
+                            <canvas id="despesaChart"></canvas>
+                        </div>
                     </div>
                     <div class="chart-container">
                         <div class="chart-title">📊 Distribuição de Receitas</div>
-                        <canvas id="receitaChart"></canvas>
+                        <div class="chart-wrapper">
+                            <canvas id="receitaChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="charts-row">
                 <div class="chart-container">
-                    <div class="chart-title">📊 Análise de Receitas x Despesas</div>
-                    <canvas id="comparativoChart"></canvas>
+                    <div class="chart-title">📊 Receitas x Despesas</div>
+                    <div class="chart-wrapper">
+                        <canvas id="comparativoChart"></canvas>
+                    </div>
                 </div>
                 <div class="chart-container">
                     <div class="chart-title">📋 Resumo por Categoria</div>
@@ -667,10 +712,9 @@
             </div>
         </div>
 
-        <!-- LANÇAMENTOS -->
         <div id="lancamentos-tab" class="hidden">
             <div class="filters-section">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
                     <div class="filter-group">
                         <label>Tipo</label>
                         <div class="filter-buttons">
@@ -698,7 +742,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="filter-group" style="margin-top: 15px;">
+                <div class="filter-group" style="margin-top: 12px;">
                     <label>Status (Despesas)</label>
                     <div class="filter-buttons">
                         <button class="filter-btn active" onclick="filterStatus('TODOS', this)">TODOS</button>
@@ -707,7 +751,7 @@
                         <button class="filter-btn atrasado-btn" onclick="filterStatus('ATRASADO', this)">🔔 Atrasadas</button>
                     </div>
                 </div>
-                <div class="filter-group" style="margin-top: 15px;">
+                <div class="filter-group" style="margin-top: 12px;">
                     <label>Categoria</label>
                     <div class="filter-buttons" id="cat-lancamento-filters">
                         <button class="filter-btn active" onclick="filterCatLancamento('TODOS', this)">TODOS</button>
@@ -721,157 +765,106 @@
                         <span>🔍</span>
                         <input type="text" id="search-input" placeholder="Buscar lançamento..." onkeyup="searchLancamentos()">
                     </div>
-                    <div style="display: flex; gap: 10px;">
+                    <div style="display: flex; gap: 10px;" class="desktop-only">
                         <button class="btn-export" onclick="openExportModal()">
                             <span>📊</span> Exportar Excel
                         </button>
                         <button class="btn-add" onclick="openModal()">
-                            <span>+</span> Novo Lançamento
+                            <span>+</span> Novo
                         </button>
                     </div>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Pago?</th>
-                            <th>Data</th>
-                            <th>Vencimento</th>
-                            <th>Mês</th>
-                            <th>Descrição</th>
-                            <th>Tipo</th>
-                            <th>Categoria</th>
-                            <th>Valor</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lancamentos-table">
-                    </tbody>
-                </table>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pago?</th>
+                                <th>Data</th>
+                                <th>Vencimento</th>
+                                <th>Mês</th>
+                                <th>Descrição</th>
+                                <th>Tipo</th>
+                                <th>Categoria</th>
+                                <th>Valor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lancamentos-table"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- ABA DE SINCRONIZAÇÃO -->
         <div id="sync-tab" class="hidden">
-            <div class="sync-info">
-                <h3>🔄 Sincronização Manual via Arquivo</h3>
-                <ul>
-                    <li>✅ 100% grátis (não paga nada, nunca)</li>
-                    <li>✅ Não buga (sem servidor, sem dependência de terceiros)</li>
-                    <li>✅ Você controla seus dados</li>
-                    <li>✅ Funciona sempre (com ou sem internet)</li>
-                    <li>✅ Super simples: Exporta → Manda → Importa</li>
-                </ul>
+            <div class="filters-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <h3 style="margin-bottom: 10px;">🔄 Sincronização Manual</h3>
+                <p style="opacity: 0.9; font-size: 14px;">
+                    ✅ 100% grátis • ✅ Não buga • ✅ Funciona offline • ✅ Sincroniza via QR Code
+                </p>
             </div>
 
             <div class="sync-options">
-                <!-- CELULAR → PC -->
-                <div class="sync-card celular-pc">
-                    <div class="icon">📱➡️💻</div>
-                    <h4>Celular → PC</h4>
-                    <div class="sync-steps">
-                        <ol>
-                            <li>No celular: clica "📤 Exportar para PC"</li>
-                            <li>Gera arquivo .json ou QR Code</li>
-                            <li>Manda pro PC (WhatsApp, email, cabo, Bluetooth)</li>
-                            <li>No PC: clica "📥 Importar do Celular"</li>
-                            <li>Pronto! Tudo sincronizado</li>
-                        </ol>
-                    </div>
-                    <button class="btn-sync-action btn-exportar" onclick="openExportSyncModal('celular')">
-                        📤 Exportar para PC
+                <div class="sync-card">
+                    <div class="icon" style="font-size: 40px;">📱➡️💻</div>
+                    <h4>Exportar Dados</h4>
+                    <p style="font-size: 13px; color: #666; margin: 10px 0;">
+                        Envie seus dados para outro dispositivo via arquivo ou QR Code
+                    </p>
+                    <button class="btn-sync-action" style="background: #3498db; color: white;" onclick="openExportSyncModal()">
+                        📤 Exportar Agora
                     </button>
                 </div>
 
-                <!-- PC → CELULAR -->
-                <div class="sync-card pc-celular">
-                    <div class="icon">💻➡️📱</div>
-                    <h4>PC → Celular</h4>
-                    <div class="sync-steps">
-                        <ol>
-                            <li>No PC: clica "📤 Exportar para Celular"</li>
-                            <li>Manda pro celular</li>
-                            <li>No celular: clica "📥 Importar"</li>
-                            <li>Pronto! Tudo sincronizado</li>
-                        </ol>
-                    </div>
-                    <button class="btn-sync-action btn-exportar" onclick="openExportSyncModal('pc')">
-                        📤 Exportar para Celular
+                <div class="sync-card">
+                    <div class="icon" style="font-size: 40px;">💻➡️📱</div>
+                    <h4>Importar Dados</h4>
+                    <p style="font-size: 13px; color: #666; margin: 10px 0;">
+                        Receba dados de outro dispositivo
+                    </p>
+                    <button class="btn-sync-action" style="background: #27ae60; color: white;" onclick="document.getElementById('import-file').click()">
+                        📥 Importar Arquivo
                     </button>
+                    <input type="file" id="import-file" accept=".json" style="display: none;" onchange="handleFileImport(event)">
                 </div>
             </div>
 
-            <div class="filters-section">
-                <h3 style="margin-bottom: 15px; color: #2c3e50;">📥 Importar Dados</h3>
-                <div class="sync-options">
-                    <div class="sync-card">
-                        <div class="icon" style="font-size: 36px;">📁</div>
-                        <h4>Importar arquivo JSON</h4>
-                        <p style="font-size: 13px; color: #666; margin-bottom: 15px;">
-                            Selecione um arquivo .json exportado anteriormente
-                        </p>
-                        <div class="file-input-wrapper">
-                            <input type="file" id="import-file" accept=".json" onchange="handleFileImport(event)">
-                            <label for="import-file" class="file-input-label">
-                                📂 Clique para selecionar arquivo
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="sync-card">
-                        <div class="icon" style="font-size: 36px;">📷</div>
-                        <h4>Ler QR Code</h4>
-                        <p style="font-size: 13px; color: #666; margin-bottom: 15px;">
-                            Use a câmera para escanear um QR Code
-                        </p>
-                        <button class="btn-sync-action btn-ler-qr" onclick="startQRScanner()">
-                            📷 Abrir Câmera
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="filters-section" id="sync-status" style="display: none;">
-                <h3 style="margin-bottom: 15px; color: #2c3e50;">📊 Status da Sincronização</h3>
-                <div class="sync-stats">
-                    <div class="stat-box">
-                        <div class="stat-number" id="stat-novos">0</div>
-                        <div class="stat-label">Novos</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="stat-atualizados">0</div>
-                        <div class="stat-label">Atualizados</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="stat-conflitos">0</div>
-                        <div class="stat-label">Conflitos</div>
-                    </div>
-                </div>
-                <div id="conflict-resolution" class="conflict-list" style="display: none;">
-                    <h4 style="margin-bottom: 10px; color: #e74c3c;">⚠️ Conflitos Detectados</h4>
-                    <div id="conflict-list-content"></div>
+            <div class="sync-options">
+                <div class="sync-card">
+                    <div class="icon" style="font-size: 36px;">📷</div>
+                    <h4>Ler QR Code</h4>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 12px;">
+                        Use a câmera para escanear
+                    </p>
+                    <button class="btn-sync-action" style="background: #9b59b6; color: white;" onclick="startQRScanner()">
+                        📷 Abrir Câmera
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAIS -->
+    <button class="fab" onclick="openModal()">+</button>
+
     <div class="modal" id="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="modal-title">Novo Lançamento</h3>
-                <button class="btn-close" onclick="closeModal()">&times;</button>
+                <button class="btn-close" onclick="closeModal()">×</button>
             </div>
             <form id="form-lancamento">
                 <input type="hidden" id="edit-id">
-                <div class="form-group">
-                    <label>Data do Lançamento</label>
-                    <input type="date" id="data" required>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label>Data do Lançamento</label>
+                        <input type="date" id="data" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Vencimento</label>
+                        <input type="date" id="data-vencimento" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Data de Vencimento</label>
-                    <input type="date" id="data-vencimento" required>
-                    <small style="color: #666; font-size: 11px;">Preenche automatico pela categoria (⚙️ Config)</small>
-                </div>
+
                 <div class="form-group">
                     <label>Mês</label>
                     <select id="mes" required>
@@ -889,25 +882,29 @@
                         <option value="DEZ">Dezembro</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label>Descrição</label>
                     <input type="text" id="descricao" placeholder="Ex: TV, Celular..." required>
                 </div>
-                <div class="form-group">
-                    <label>Tipo</label>
-                    <select id="tipo" required onchange="updateCategorias(); togglePagoField();">
-                        <option value="Despesa">Despesa</option>
-                        <option value="Receita">Receita</option>
-                    </select>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label>Tipo</label>
+                        <select id="tipo" required onchange="updateCategorias(); togglePagoField();">
+                            <option value="Despesa">Despesa</option>
+                            <option value="Receita">Receita</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <select id="categoria" required onchange="sugerirVencimento()"></select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Categoria</label>
-                    <select id="categoria" required onchange="sugerirVencimento()">
-                    </select>
-                </div>
+
                 <div class="form-group">
                     <label>Valor Total (R$)</label>
-                    <input type="number" id="valor" step="0.01" placeholder="0,00" required>
+                    <input type="number" id="valor" step="0.01" placeholder="0,00" required oninput="if(document.getElementById('is-parcelado').checked) calcularParcelas()">
                 </div>
 
                 <div class="checkbox-group">
@@ -915,13 +912,13 @@
                     <label for="is-parcelado">📦 É parcelado?</label>
                 </div>
 
-                <div class="parcelamento-fields" id="parcelamento-fields">
+                <div class="parcelamento-fields hidden" id="parcelamento-fields" style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
                     <div class="form-group">
                         <label>Quantidade de Parcelas</label>
                         <input type="number" id="qtd-parcelas" min="2" max="48" value="2" onchange="calcularParcelas()">
                     </div>
-                    <div class="parcelamento-info" id="parcelamento-info">
-                        Cada parcela sairá: <strong>R$ 0,00</strong>
+                    <div id="parcelamento-info" style="color: #27ae60; font-weight: 600;">
+                        Cada parcela: R$ 0,00
                     </div>
                 </div>
 
@@ -932,7 +929,7 @@
 
                 <div class="form-group">
                     <label>Observações (opcional)</label>
-                    <textarea id="observacoes" rows="3" placeholder="Ex: Paguei no débito..."></textarea>
+                    <textarea id="observacoes" rows="2" placeholder="Ex: Paguei no débito..."></textarea>
                 </div>
 
                 <div class="form-actions">
@@ -944,13 +941,13 @@
     </div>
 
     <div class="modal" id="config-modal">
-        <div class="modal-content large">
+        <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">⚙️ Configurar Vencimentos</h3>
-                <button class="btn-close" onclick="closeConfigModal()">&times;</button>
+                <button class="btn-close" onclick="closeConfigModal()">×</button>
             </div>
-            <p style="margin-bottom: 15px; color: #666;">Defina o dia de vencimento para cada categoria:</p>
-            <div class="config-list" id="config-list"></div>
+            <p style="margin-bottom: 15px; color: #666; font-size: 14px;">Defina o dia de vencimento para cada categoria:</p>
+            <div class="config-list" id="config-list" style="max-height: 50vh; overflow-y: auto; margin-bottom: 20px;"></div>
             <div class="form-actions">
                 <button type="button" class="btn-cancel" onclick="closeConfigModal()">Cancelar</button>
                 <button type="button" class="btn-save" onclick="salvarConfiguracoes()">💾 Salvar</button>
@@ -962,11 +959,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">📊 Exportar Excel</h3>
-                <button class="btn-close" onclick="closeExportModal()">&times;</button>
+                <button class="btn-close" onclick="closeExportModal()">×</button>
             </div>
             <div class="form-group">
                 <label>Selecione o Mês</label>
-                <select id="export-mes">
+                <select id="export-mes" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
                     <option value="TODOS">Todos os meses</option>
                     <option value="JAN">Janeiro</option>
                     <option value="FEV">Fevereiro</option>
@@ -989,92 +986,83 @@
         </div>
     </div>
 
-    <!-- MODAL DE EXPORTAÇÃO PARA SINCRONIZAÇÃO -->
     <div class="modal" id="sync-export-modal">
-        <div class="modal-content large">
+        <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
-                <h3 class="modal-title" id="sync-export-title">📤 Exportar Dados</h3>
-                <button class="btn-close" onclick="closeSyncExportModal()">&times;</button>
+                <h3 class="modal-title">📤 Exportar Dados</h3>
+                <button class="btn-close" onclick="closeSyncExportModal()">×</button>
             </div>
 
-            <div class="form-group">
-                <label>Escolha o formato:</label>
-                <div class="format-toggle">
-                    <button class="active" onclick="setExportFormat('json', this)" id="btn-format-json">📄 Arquivo JSON</button>
-                    <button onclick="setExportFormat('qr', this)" id="btn-format-qr">📱 QR Code</button>
-                </div>
+            <div style="display: flex; background: #f0f0f0; border-radius: 25px; padding: 4px; margin-bottom: 20px;">
+                <button style="flex: 1; padding: 12px; border: none; background: #3498db; color: white; border-radius: 20px; font-weight: 600;" onclick="setExportFormat('json', this)" id="btn-format-json">📄 JSON</button>
+                <button style="flex: 1; padding: 12px; border: none; background: transparent; border-radius: 20px; font-weight: 600;" onclick="setExportFormat('qr', this)" id="btn-format-qr">📱 QR Code</button>
             </div>
 
             <div id="json-export-section">
-                <div class="form-group">
-                    <label>Dados a exportar:</label>
-                    <div class="sync-stats" style="margin-top: 10px;">
-                        <div class="stat-box">
-                            <div class="stat-number" id="export-count">0</div>
-                            <div class="stat-label">Lançamentos</div>
-                        </div>
-                    </div>
+                <div style="text-align: center; padding: 20px; background: #f8f9fa; border-radius: 12px; margin-bottom: 16px;">
+                    <div style="font-size: 32px; margin-bottom: 8px;">📦</div>
+                    <div style="font-size: 24px; font-weight: bold; color: #2c3e50;" id="export-count">0</div>
+                    <div style="color: #666;">Lançamentos para exportar</div>
                 </div>
-                <div class="form-actions">
-                    <button type="button" class="btn-save" onclick="downloadJSON()" style="width: 100%;">
-                        💾 Baixar arquivo financeiro.json
-                    </button>
-                </div>
+                <button class="btn-save" onclick="downloadJSON()" style="width: 100%;">💾 Baixar arquivo JSON</button>
             </div>
 
             <div id="qr-export-section" style="display: none;">
-                <div class="qr-display" id="qr-display-area">
-                    <p style="margin-bottom: 10px; color: #666;">Escaneie este QR Code com o outro dispositivo:</p>
-                    <canvas id="qrcode-canvas"></canvas>
-                    <p style="margin-top: 10px; font-size: 12px; color: #999;">
-                        Dados compactados: <span id="qr-size">0</span> bytes
-                    </p>
-                    <p style="margin-top: 5px; font-size: 11px; color: #e74c3c;" id="qr-warning"></p>
+                <div class="qr-display">
+                    <canvas id="qrcode-canvas" style="max-width: 100%;"></canvas>
+                    <p style="margin-top: 10px; font-size: 12px; color: #999;">Escaneie com o outro dispositivo</p>
                 </div>
-                <div class="form-actions">
-                    <button type="button" class="btn-save" onclick="regenerateQR()" style="width: 100%;">
-                        🔄 Gerar Novo QR Code
-                    </button>
-                </div>
+                <button class="btn-save" onclick="regenerateQR()" style="width: 100%;">🔄 Gerar Novo QR Code</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL DE SCANNER DE QR CODE -->
     <div class="modal" id="qr-scanner-modal">
-        <div class="modal-content large">
+        <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
                 <h3 class="modal-title">📷 Escanear QR Code</h3>
-                <button class="btn-close" onclick="stopQRScanner()">&times;</button>
+                <button class="btn-close" onclick="stopQRScanner()">×</button>
             </div>
 
-            <div class="video-preview">
-                <video id="qr-video" autoplay playsinline></video>
+            <div style="width: 100%; border-radius: 12px; overflow: hidden; border: 3px solid #3498db; background: #000;">
+                <video id="qr-video" style="width: 100%; display: block;" autoplay playsinline></video>
                 <canvas id="qr-canvas" style="display: none;"></canvas>
             </div>
 
-            <div style="text-align: center; margin-top: 15px;">
-                <p style="color: #666; margin-bottom: 10px;">Posicione o QR Code na frente da câmera</p>
-                <div id="qr-status" style="padding: 10px; background: #f8f9fa; border-radius: 5px; color: #666;">
+            <div style="text-align: center; margin-top: 16px;">
+                <p style="color: #666; margin-bottom: 10px; font-size: 14px;">Posicione o QR Code na frente da câmera</p>
+                <div id="qr-status" style="padding: 12px; background: #f8f9fa; border-radius: 8px; color: #666; font-weight: 500;">
                     Iniciando câmera...
                 </div>
             </div>
 
-            <div class="form-group" style="margin-top: 15px;">
-                <label>Ou selecione uma imagem:</label>
-                <div class="file-input-wrapper">
-                    <input type="file" id="qr-image-input" accept="image/*" onchange="handleQRImage(event)">
-                    <label for="qr-image-input" class="file-input-label">
-                        🖼️ Selecionar imagem com QR Code
-                    </label>
-                </div>
+            <div style="margin-top: 16px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Ou selecione uma imagem:</label>
+                <input type="file" id="qr-image-input" accept="image/*" onchange="handleQRImage(event)" style="width: 100%; padding: 12px; border: 2px dashed #ccc; border-radius: 8px;">
             </div>
         </div>
     </div>
 
     <script>
+        // Service Worker
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                const CACHE_NAME = 'financeiro-v3';
+                const urlsToCache = ['/financeiro/', '/financeiro/index.html'];
+                self.addEventListener('install', e => {
+                    e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache)));
+                });
+                self.addEventListener('fetch', e => {
+                    e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+                });
+            `;
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            navigator.serviceWorker.register(URL.createObjectURL(blob))
+                .then(() => console.log('App instalado!'))
+                .catch(err => console.log('Erro:', err));
+        }
 
-        // DADOS
+        // Dados
         const CATEGORIAS_DESPESA = ['INTERNET', 'LUZ', 'AGUA', 'CARTAO EMPRESA ITAU', 'PIC ITAU', 'SEGURO DO CARRO', 'DIVIDA', 'SALÃO', 'COMIDA', 'SCOBINHO', 'TV', 'SEGURANCA CASA', 'ACADEMIA', 'CARRO', 'CARTAO NEON', 'CARTAO CREDITO NU', 'CARTAO CREDITO ITAU', 'CASA', 'COMPRAS', 'TELEFONE', 'VIAGEM', 'SAUDE', 'PRESENTE'];
         const CATEGORIAS_RECEITA = ['SALARIO', 'RENDA EXTRA', 'INVESTIMENTO', 'OUTROS'];
         const VENCIMENTOS_INICIAIS = {'INTERNET': 10, 'LUZ': 15, 'AGUA': 20, 'CARTAO EMPRESA ITAU': 8, 'PIC ITAU': 5, 'SEGURO DO CARRO': 12, 'TV': 10, 'TELEFONE': 12, 'ACADEMIA': 5, 'SALÃO': 25, 'CARTAO NEON': 7, 'CARTAO CREDITO NU': 15, 'CARTAO CREDITO ITAU': 10, 'CARRO': 20, 'SALARIO': 5, 'RENDA EXTRA': 15};
@@ -1083,12 +1071,18 @@
         let lancamentos = JSON.parse(localStorage.getItem('lancamentos')) || [];
         let vencimentosConfig = JSON.parse(localStorage.getItem('vencimentosConfig')) || {...VENCIMENTOS_INICIAIS};
         let filtros = {mes: 'TODOS', categoria: 'TODOS', tipoLancamento: 'TODOS', mesLancamento: 'TODOS', catLancamento: 'TODOS', status: 'TODOS', search: ''};
-        let charts = {};
+        
+        // CORREÇÃO: Objeto para armazenar instâncias dos gráficos
+        let charts = {
+            saldo: null,
+            despesa: null,
+            receita: null,
+            comparativo: null
+        };
+        
         let currentExportFormat = 'json';
         let qrScannerStream = null;
         let qrScanning = false;
-        let pendingConflicts = [];
-        let importedData = null;
         let qrCodeObj = null;
 
         function init() {
@@ -1136,6 +1130,11 @@
             return 'R$ ' + value.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         }
 
+        function toggleMobileMenu() {
+            const nav = document.getElementById('navTabs');
+            nav.classList.toggle('active');
+        }
+
         function showTab(tab) {
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
@@ -1153,9 +1152,12 @@
             } else if (tab === 'sync') {
                 document.getElementById('sync-tab').classList.remove('hidden');
             }
+            
+            if (window.innerWidth <= 768) {
+                document.getElementById('navTabs').classList.remove('active');
+            }
         }
 
-        // FUNÇÕES DE FILTRO COM MUDANÇA DE COR
         function setActiveButton(container, clickedBtn) {
             container.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             clickedBtn.classList.add('active');
@@ -1202,7 +1204,6 @@
             renderTable();
         }
 
-        // CONFIGURAÇÃO
         function openConfigModal() {
             const list = document.getElementById('config-list');
             list.innerHTML = '';
@@ -1213,10 +1214,10 @@
                 const item = document.createElement('div');
                 item.className = 'config-item';
                 item.innerHTML = `
-                    <label style="font-weight: 600;">${cat}</label>
+                    <label style="font-weight: 600; font-size: 14px;">${cat}</label>
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 12px; color: #666;">Dia:</span>
-                        <input type="number" min="1" max="31" value="${dia}" placeholder="-" data-categoria="${cat}">
+                        <span style="font-size: 13px; color: #666;">Dia:</span>
+                        <input type="number" min="1" max="31" value="${dia}" placeholder="-" data-categoria="${cat}" style="width: 60px; text-align: center; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;">
                     </div>
                 `;
                 list.appendChild(item);
@@ -1270,10 +1271,10 @@
             const isParcelado = document.getElementById('is-parcelado').checked;
             const fields = document.getElementById('parcelamento-fields');
             if (isParcelado) {
-                fields.classList.add('active');
+                fields.classList.remove('hidden');
                 calcularParcelas();
             } else {
-                fields.classList.remove('active');
+                fields.classList.add('hidden');
             }
         }
 
@@ -1304,6 +1305,7 @@
             }
         }
 
+        // CORREÇÃO PRINCIPAL: Função updateDashboard com destruição correta dos gráficos
         function updateDashboard() {
             const filtered = lancamentos.filter(l => {
                 if (filtros.mes !== 'TODOS' && l.mes !== filtros.mes) return false;
@@ -1324,7 +1326,6 @@
             document.getElementById('total-atrasado').textContent = formatMoney(atrasados.reduce((a, b) => a + b.valor, 0));
             document.getElementById('qtd-atrasado').textContent = `${atrasados.length} contas`;
 
-            // Gráficos...
             const dadosPorMes = MESES.map(m => {
                 const receitas = lancamentos.filter(l => l.mes === m && l.tipo === 'Receita').reduce((a, b) => a + b.valor, 0);
                 const despesas = lancamentos.filter(l => l.mes === m && l.tipo === 'Despesa').reduce((a, b) => a + b.valor, 0);
@@ -1334,29 +1335,119 @@
             let acumulado = 0;
             const saldoAcumulado = dadosPorMes.map(d => { acumulado += d.saldo; return acumulado; });
 
-            Object.values(charts).forEach(c => c.destroy());
+            // CORREÇÃO: Destruir gráficos existentes antes de criar novos
+            if (charts.saldo) {
+                charts.saldo.destroy();
+                charts.saldo = null;
+            }
+            if (charts.despesa) {
+                charts.despesa.destroy();
+                charts.despesa = null;
+            }
+            if (charts.receita) {
+                charts.receita.destroy();
+                charts.receita = null;
+            }
+            if (charts.comparativo) {
+                charts.comparativo.destroy();
+                charts.comparativo = null;
+            }
 
+            const isMobile = window.innerWidth < 768;
+
+            // Gráfico 1: Saldo
             const ctxSaldo = document.getElementById('saldoChart').getContext('2d');
             charts.saldo = new Chart(ctxSaldo, {
                 type: 'bar',
-                data: { labels: MESES, datasets: [{ label: 'Saldo Mês', data: dadosPorMes.map(d => d.saldo), backgroundColor: '#3498db', order: 2 }, { label: 'Saldo Acumulado', data: saldoAcumulado, type: 'line', borderColor: '#f1c40f', backgroundColor: '#f1c40f', tension: 0.4, order: 1 }] },
-                options: { responsive: true, plugins: { legend: { position: 'top' } } }
+                data: { 
+                    labels: MESES, 
+                    datasets: [
+                        { label: 'Saldo Mês', data: dadosPorMes.map(d => d.saldo), backgroundColor: '#3498db', order: 2 }, 
+                        { label: 'Acumulado', data: saldoAcumulado, type: 'line', borderColor: '#f1c40f', backgroundColor: '#f1c40f', tension: 0.4, order: 1, pointRadius: isMobile ? 2 : 3 }
+                    ] 
+                },
+                options: { 
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } } 
+                    },
+                    scales: { 
+                        x: { ticks: { font: { size: 10 } } }, 
+                        y: { ticks: { font: { size: 10 } } } 
+                    }
+                }
             });
 
+            // Gráfico 2: Despesas por categoria
             const despesasPorCat = {};
             lancamentos.filter(l => l.tipo === 'Despesa').forEach(l => despesasPorCat[l.categoria] = (despesasPorCat[l.categoria] || 0) + l.valor);
 
             const ctxDespesa = document.getElementById('despesaChart').getContext('2d');
-            charts.despesa = new Chart(ctxDespesa, { type: 'bar', data: { labels: Object.keys(despesasPorCat), datasets: [{ data: Object.values(despesasPorCat), backgroundColor: '#e74c3c' }] }, options: { indexAxis: 'y', plugins: { legend: { display: false } } } });
+            charts.despesa = new Chart(ctxDespesa, { 
+                type: 'bar', 
+                data: { 
+                    labels: Object.keys(despesasPorCat), 
+                    datasets: [{ data: Object.values(despesasPorCat), backgroundColor: '#e74c3c' }] 
+                }, 
+                options: { 
+                    indexAxis: 'y', 
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { 
+                        y: { ticks: { font: { size: 9 } } }, 
+                        x: { ticks: { font: { size: 9 } } } 
+                    }
+                } 
+            });
 
+            // Gráfico 3: Receitas
             const receitasPorCat = {};
             lancamentos.filter(l => l.tipo === 'Receita').forEach(l => receitasPorCat[l.categoria] = (receitasPorCat[l.categoria] || 0) + l.valor);
 
             const ctxReceita = document.getElementById('receitaChart').getContext('2d');
-            charts.receita = new Chart(ctxReceita, { type: 'doughnut', data: { labels: Object.keys(receitasPorCat), datasets: [{ data: Object.values(receitasPorCat), backgroundColor: ['#1abc9c', '#16a085', '#2ecc71', '#27ae60'] }] }, options: { plugins: { legend: { position: 'bottom' } } } });
+            charts.receita = new Chart(ctxReceita, { 
+                type: 'doughnut', 
+                data: { 
+                    labels: Object.keys(receitasPorCat), 
+                    datasets: [{ 
+                        data: Object.values(receitasPorCat), 
+                        backgroundColor: ['#1abc9c', '#16a085', '#2ecc71', '#27ae60'] 
+                    }] 
+                }, 
+                options: { 
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } 
+                    } 
+                } 
+            });
 
+            // Gráfico 4: Comparativo
             const ctxComp = document.getElementById('comparativoChart').getContext('2d');
-            charts.comparativo = new Chart(ctxComp, { type: 'bar', data: { labels: MESES, datasets: [{ label: 'Receitas', data: dadosPorMes.map(d => d.receita), backgroundColor: '#1abc9c' }, { label: 'Despesas', data: dadosPorMes.map(d => d.despesa), backgroundColor: '#e74c3c' }] }, options: { plugins: { legend: { position: 'top' } } } });
+            charts.comparativo = new Chart(ctxComp, { 
+                type: 'bar', 
+                data: { 
+                    labels: MESES, 
+                    datasets: [
+                        { label: 'Receitas', data: dadosPorMes.map(d => d.receita), backgroundColor: '#1abc9c' }, 
+                        { label: 'Despesas', data: dadosPorMes.map(d => d.despesa), backgroundColor: '#e74c3c' }
+                    ] 
+                }, 
+                options: { 
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } } 
+                    },
+                    scales: { 
+                        x: { ticks: { font: { size: 10 } } }, 
+                        y: { ticks: { font: { size: 10 } } } 
+                    }
+                } 
+            });
         }
 
         function renderTable() {
@@ -1379,26 +1470,15 @@
                 if (l.pago && l.tipo === 'Despesa') tr.classList.add('linha-pago');
                 if (isAtrasado(l)) tr.classList.add('linha-atrasada');
 
-                let statusText = '-';
-                let statusClass = 'ok';
-                if (l.tipo === 'Despesa' && !l.pago && l.dataVencimento) {
-                    const hoje = new Date(); hoje.setHours(0,0,0,0);
-                    const venc = new Date(l.dataVencimento);
-                    const diff = Math.ceil((venc - hoje) / (1000 * 60 * 60 * 24));
-                    if (diff < 0) { statusText = `Atrasado ${Math.abs(diff)}d`; statusClass = 'atrasado'; }
-                    else if (diff <= 3) { statusText = `Vence ${diff}d`; statusClass = 'alerta'; }
-                    else { statusText = `Vence ${diff}d`; statusClass = 'ok'; }
-                }
-
                 const pagoCheckbox = l.tipo === 'Despesa' ? `<input type="checkbox" class="pago-checkbox" ${l.pago ? 'checked' : ''} onchange="togglePago(${l.id})">` : '-';
                 const dataVenc = l.dataVencimento ? new Date(l.dataVencimento).toLocaleDateString('pt-BR') : '-';
 
                 tr.innerHTML = `
                     <td>${pagoCheckbox}</td>
                     <td>${new Date(l.data).toLocaleDateString('pt-BR')}</td>
-                    <td>${dataVenc} <span class="vencimento-badge ${statusClass}">${statusText}</span></td>
+                    <td>${dataVenc}</td>
                     <td>${l.mes}</td>
-                    <td>${l.descricao} ${l.parcela ? `<span class="parcela-badge">${l.parcela}/${l.totalParcelas}</span>` : ''}</td>
+                    <td>${l.descricao} ${l.parcela ? `<small style="color: #666;">(${l.parcela}/${l.totalParcelas})</small>` : ''}</td>
                     <td><span class="tipo-badge ${l.tipo.toLowerCase()}">${l.tipo}</span></td>
                     <td>${l.categoria}</td>
                     <td class="${l.tipo === 'Receita' ? 'valor-receita' : 'valor-despesa'}">${formatMoney(l.valor)}</td>
@@ -1431,7 +1511,7 @@
             document.getElementById('form-lancamento').reset();
             document.getElementById('edit-id').value = '';
             document.getElementById('data').valueAsDate = new Date();
-            document.getElementById('parcelamento-fields').classList.remove('active');
+            document.getElementById('parcelamento-fields').classList.add('hidden');
             updateCategorias();
             togglePagoField();
         }
@@ -1460,7 +1540,7 @@
         }
 
         function deleteLancamento(id) {
-            if (confirm('Tem certeza?')) {
+            if (confirm('Tem certeza que deseja excluir?')) {
                 lancamentos = lancamentos.filter(l => l.id !== id);
                 saveData();
                 renderTable();
@@ -1558,61 +1638,31 @@
             updateDashboard();
         });
 
-        document.getElementById('valor').addEventListener('input', function() {
-            if (document.getElementById('is-parcelado').checked) calcularParcelas();
-        });
-
-        // ==================== FUNÇÕES DE SINCRONIZAÇÃO CORRIGIDAS ====================
-
-        function openExportSyncModal(destino) {
-            const modal = document.getElementById('sync-export-modal');
-            const title = document.getElementById('sync-export-title');
-
-            if (destino === 'celular') {
-                title.textContent = '📤 Exportar para PC';
-            } else {
-                title.textContent = '📤 Exportar para Celular';
-            }
-
+        function openExportSyncModal() {
+            document.getElementById('sync-export-modal').classList.add('active');
             document.getElementById('export-count').textContent = lancamentos.length;
-            modal.classList.add('active');
-
-            // Reset para JSON por padrão
             setExportFormat('json', document.getElementById('btn-format-json'));
         }
 
         function closeSyncExportModal() {
             document.getElementById('sync-export-modal').classList.remove('active');
-            // Limpa QR code
-            const canvas = document.getElementById('qrcode-canvas');
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
         function setExportFormat(format, btn) {
             currentExportFormat = format;
-
-            // Atualiza botões
-            document.querySelectorAll('.format-toggle button').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            // Mostra/esconde seções
-            if (format === 'json') {
-                document.getElementById('json-export-section').style.display = 'block';
-                document.getElementById('qr-export-section').style.display = 'none';
-            } else {
-                document.getElementById('json-export-section').style.display = 'none';
-                document.getElementById('qr-export-section').style.display = 'block';
-                generateQRCode();
-            }
+            document.getElementById('json-export-section').style.display = format === 'json' ? 'block' : 'none';
+            document.getElementById('qr-export-section').style.display = format === 'qr' ? 'block' : 'none';
+            
+            document.getElementById('btn-format-json').style.background = format === 'json' ? '#3498db' : 'transparent';
+            document.getElementById('btn-format-json').style.color = format === 'json' ? 'white' : '#333';
+            document.getElementById('btn-format-qr').style.background = format === 'qr' ? '#3498db' : 'transparent';
+            document.getElementById('btn-format-qr').style.color = format === 'qr' ? 'white' : '#333';
+            
+            if (format === 'qr') generateQRCode();
         }
 
         function generateQRCode() {
             const canvas = document.getElementById('qrcode-canvas');
-            const sizeDisplay = document.getElementById('qr-size');
-            const warningDisplay = document.getElementById('qr-warning');
-
-            // Prepara dados para exportação
             const exportData = {
                 versao: '1.0',
                 dataExportacao: new Date().toISOString(),
@@ -1620,51 +1670,25 @@
                 lancamentos: lancamentos,
                 vencimentosConfig: vencimentosConfig
             };
-
-            // Converte para string JSON
+            
             const jsonStr = JSON.stringify(exportData);
-
-            // Verifica tamanho (limite do QR code é aproximadamente 2953 bytes para nível H)
-            const size = new Blob([jsonStr]).size;
-            sizeDisplay.textContent = size;
-
-            if (size > 2000) {
-                warningDisplay.textContent = '⚠️ Dados muito grandes! Use o arquivo JSON em vez do QR Code.';
-                // Limpa canvas
-                const ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#f8f9fa';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#e74c3c';
-                ctx.font = '14px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('Dados muito grandes', canvas.width/2, canvas.height/2 - 10);
-                ctx.fillText('Use arquivo JSON', canvas.width/2, canvas.height/2 + 10);
+            
+            if (jsonStr.length > 2000) {
+                alert('Dados muito grandes para QR Code. Use arquivo JSON.');
+                setExportFormat('json', document.getElementById('btn-format-json'));
                 return;
             }
-
-            warningDisplay.textContent = '';
-
-            try {
-                // Usa QRious para gerar o QR code
-                if (qrCodeObj) {
-                    qrCodeObj = null;
-                }
-
-                qrCodeObj = new QRious({
-                    element: canvas,
-                    value: jsonStr,
-                    size: 250,
-                    level: 'H',
-                    background: 'white',
-                    foreground: 'black'
-                });
-
-                console.log('QR Code gerado com sucesso!');
-            } catch (err) {
-                console.error('Erro ao gerar QR Code:', err);
-                warningDisplay.textContent = '❌ Erro ao gerar QR Code: ' + err.message;
-            }
+            
+            if (qrCodeObj) qrCodeObj = null;
+            
+            qrCodeObj = new QRious({
+                element: canvas,
+                value: jsonStr,
+                size: 250,
+                level: 'H',
+                background: 'white',
+                foreground: 'black'
+            });
         }
 
         function regenerateQR() {
@@ -1688,12 +1712,8 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-
             closeSyncExportModal();
-            alert('✅ Arquivo exportado com sucesso!\n\nEnvie pelo WhatsApp, email ou qualquer meio para o outro dispositivo.');
         }
-
-        // ==================== IMPORTAÇÃO ====================
 
         function handleFileImport(event) {
             const file = event.target.files[0];
@@ -1709,8 +1729,6 @@
                 }
             };
             reader.readAsText(file);
-
-            // Limpa input
             event.target.value = '';
         }
 
@@ -1720,126 +1738,24 @@
                 return;
             }
 
-            importedData = data;
-            const novos = [];
-            const atualizados = [];
-            const conflitos = [];
-
-            // Analisa cada lançamento importado
+            let count = 0;
             data.lancamentos.forEach(importado => {
                 const existente = lancamentos.find(l => l.id === importado.id);
-
                 if (!existente) {
-                    novos.push(importado);
-                } else if (JSON.stringify(existente) !== JSON.stringify(importado)) {
-                    // Verifica qual é mais recente (usa data como proxy)
-                    const dataExistente = new Date(existente.data);
-                    const dataImportado = new Date(importado.data);
-
-                    if (dataImportado > dataExistente) {
-                        atualizados.push({ local: existente, importado: importado });
-                    } else {
-                        conflitos.push({ local: existente, importado: importado });
-                    }
+                    lancamentos.push(importado);
+                    count++;
                 }
             });
 
-            // Atualiza estatísticas
-            document.getElementById('stat-novos').textContent = novos.length;
-            document.getElementById('stat-atualizados').textContent = atualizados.length;
-            document.getElementById('stat-conflitos').textContent = conflitos.length;
-            document.getElementById('sync-status').style.display = 'block';
-
-            // Aplica novos e atualizados automaticamente
-            novos.forEach(l => lancamentos.push(l));
-            atualizados.forEach(({ importado }) => {
-                const idx = lancamentos.findIndex(l => l.id === importado.id);
-                if (idx !== -1) lancamentos[idx] = importado;
-            });
-
-            // Mescla configurações (prioriza local, mas adiciona novas)
             if (data.vencimentosConfig) {
-                Object.keys(data.vencimentosConfig).forEach(key => {
-                    if (!vencimentosConfig[key]) {
-                        vencimentosConfig[key] = data.vencimentosConfig[key];
-                    }
-                });
-            }
-
-            // Mostra conflitos para resolução
-            if (conflitos.length > 0) {
-                pendingConflicts = conflitos;
-                showConflicts(conflitos);
-            } else {
-                finalizeImport();
+                Object.assign(vencimentosConfig, data.vencimentosConfig);
             }
 
             saveData();
-        }
-
-        function showConflicts(conflitos) {
-            const container = document.getElementById('conflict-resolution');
-            const listContent = document.getElementById('conflict-list-content');
-
-            container.style.display = 'block';
-            listContent.innerHTML = '';
-
-            conflitos.forEach((conflict, index) => {
-                const item = document.createElement('div');
-                item.className = 'conflict-item';
-                item.id = `conflict-${index}`;
-                item.innerHTML = `
-                    <div>
-                        <strong>${conflict.importado.descricao}</strong><br>
-                        <small>Local: ${formatMoney(conflict.local.valor)} | Importado: ${formatMoney(conflict.importado.valor)}</small>
-                    </div>
-                    <div class="conflict-actions">
-                        <button class="btn-conflict btn-keep-local" onclick="resolveConflict(${index}, 'local')">Manter Local</button>
-                        <button class="btn-conflict btn-keep-imported" onclick="resolveConflict(${index}, 'imported')">Usar Importado</button>
-                        <button class="btn-conflict btn-keep-both" onclick="resolveConflict(${index}, 'both')">Manter Ambos</button>
-                    </div>
-                `;
-                listContent.appendChild(item);
-            });
-        }
-
-        function resolveConflict(index, decision) {
-            const conflict = pendingConflicts[index];
-            const item = document.getElementById(`conflict-${index}`);
-
-            if (decision === 'imported') {
-                const idx = lancamentos.findIndex(l => l.id === conflict.importado.id);
-                if (idx !== -1) lancamentos[idx] = conflict.importado;
-            } else if (decision === 'both') {
-                // Cria novo ID para o importado
-                conflict.importado.id = Date.now() + Math.random();
-                lancamentos.push(conflict.importado);
-            }
-            // Se 'local', não faz nada
-
-            item.classList.add('resolved');
-            item.querySelector('.conflict-actions').innerHTML = '<span style="color: #27ae60;">✓ Resolvido</span>';
-
-            // Verifica se todos foram resolvidos
-            const allResolved = pendingConflicts.every((_, i) => 
-                document.getElementById(`conflict-${i}`).classList.contains('resolved')
-            );
-
-            if (allResolved) {
-                setTimeout(finalizeImport, 500);
-            }
-
-            saveData();
-        }
-
-        function finalizeImport() {
-            alert(`✅ Sincronização concluída!\n\nDados mesclados com sucesso.`);
-            document.getElementById('conflict-resolution').style.display = 'none';
             updateDashboard();
             renderTable();
+            alert(`✅ ${count} lançamentos importados com sucesso!`);
         }
-
-        // ==================== SCANNER DE QR CODE ====================
 
         async function startQRScanner() {
             const modal = document.getElementById('qr-scanner-modal');
@@ -1861,9 +1777,8 @@
 
                 scanQRFrame(video, canvas);
             } catch (err) {
-                status.textContent = '❌ Erro ao acessar câmera: ' + err.message;
+                status.textContent = '❌ Erro: ' + err.message;
                 status.style.background = '#f8d7da';
-                status.style.color = '#721c24';
             }
         }
 
@@ -1881,7 +1796,12 @@
 
                 if (code) {
                     stopQRScanner();
-                    processQRData(code.data);
+                    try {
+                        const data = JSON.parse(code.data);
+                        processImportedData(data);
+                    } catch (e) {
+                        alert('❌ QR Code inválido');
+                    }
                     return;
                 }
             }
@@ -1914,23 +1834,19 @@
                 const code = jsQR(imageData.data, imageData.width, imageData.height);
 
                 if (code) {
-                    processQRData(code.data);
+                    try {
+                        const data = JSON.parse(code.data);
+                        processImportedData(data);
+                        stopQRScanner();
+                    } catch (e) {
+                        alert('❌ QR Code inválido');
+                    }
                 } else {
-                    alert('❌ Nenhum QR Code encontrado na imagem');
+                    alert('❌ Nenhum QR Code encontrado');
                 }
             };
             img.src = URL.createObjectURL(file);
             event.target.value = '';
-        }
-
-        function processQRData(data) {
-            try {
-                // Tenta parsear como JSON
-                const parsed = JSON.parse(data);
-                processImportedData(parsed);
-            } catch (e) {
-                alert('❌ QR Code inválido ou dados corrompidos');
-            }
         }
 
         init();
