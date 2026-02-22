@@ -11,13 +11,13 @@
     
     <title>Controle Financeiro</title>
     
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%2327ae60' width='192' height='192' rx='30'/%3E%3Ctext x='96' y='130' font-size='100' text-anchor='middle'%3E💰%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg ' viewBox='0 0 192 192'%3E%3Crect fill='%2327ae60' width='192' height='192' rx='30'/%3E%3Ctext x='96' y='130' font-size='100' text-anchor='middle'%3E💰%3C/text%3E%3C/svg%3E">
     
     <link rel="manifest" href='data:application/json;base64,eyJuYW1lIjoiQ29udHJvbGUgRmluYW5jZWlybyIsInNob3J0X25hbWUiOiJGaW5hbmNlaXJvIiwic3RhcnRfdXJsIjoiL2luZGV4Lmh0bWwiLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjZjVmNWY1IiwidGhlbWVfY29sb3IiOiIjMmMzZTUwIiwib3JpZW50YXRpb24iOiJwb3J0cmFpdCIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnJTIweG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyUyMHZpZXdCb3g9JzAlMjAwJTIwMTkyJTIwMTkyJyUzRSUzQ3JlY3QlMjBmaWxsPSclMjMyN2FlNjAlMjclMjB3aWR0aD0nMTkyJyUyMGhlaWdodD0nMTkyJyUyMHJ4PSczMCcvJTNFJTNDdGV4dCUyMHg9Jzk2JyUyMHk9JzEzMCclMjBmb250LXNpemU9JzEwMCclMjB0ZXh0LWFuY2hvcj0nbWlkZGxlJyUzRSVDMiU5MiVDMiVBNSUzQyUyRnRleHQlM0UlM0MlMkZzdmclM0UiLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XX0='>
     
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js "></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js "></script>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -409,6 +409,24 @@
         
         .btn-edit { background: #f39c12; color: white; }
         .btn-delete { background: #e74c3c; color: white; }
+        .btn-pay { 
+            background: #27ae60; 
+            color: white; 
+            font-size: 11px;
+            padding: 6px 10px;
+        }
+        .btn-pay.pago { 
+            background: #95a5a6; 
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status-pago { background: #d4edda; color: #155724; }
+        .status-pendente { background: #f8d7da; color: #721c24; }
         
         .fab {
             position: fixed;
@@ -534,8 +552,29 @@
 
         <!-- LANÇAMENTOS -->
         <div id="lancamentos-tab" class="hidden">
+            <!-- FILTROS DE ANO E MÊS (IGUAL DO DASHBOARD) -->
             <div class="filters-compact">
                 <div class="filters-row">
+                    <select class="filter-select" id="filtro-ano-lanc" onchange="atualizarFiltrosLancamentos()">
+                        <option value="TODOS">Todos os anos</option>
+                    </select>
+                    
+                    <select class="filter-select" id="filtro-mes-lanc" onchange="atualizarFiltrosLancamentos()">
+                        <option value="TODOS">Todos os meses</option>
+                        <option value="JAN">Janeiro</option>
+                        <option value="FEV">Fevereiro</option>
+                        <option value="MAR">Março</option>
+                        <option value="ABR">Abril</option>
+                        <option value="MAI">Maio</option>
+                        <option value="JUN">Junho</option>
+                        <option value="JUL">Julho</option>
+                        <option value="AGO">Agosto</option>
+                        <option value="SET">Setembro</option>
+                        <option value="OUT">Outubro</option>
+                        <option value="NOV">Novembro</option>
+                        <option value="DEZ">Dezembro</option>
+                    </select>
+                    
                     <select class="filter-select" id="filtro-tipo-lanc" onchange="renderTable()">
                         <option value="TODOS">Todos os tipos</option>
                         <option value="Receita">Receita</option>
@@ -570,6 +609,7 @@
                             <th>Tipo</th>
                             <th>Categoria</th>
                             <th>Valor</th>
+                            <th>Status</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -789,6 +829,8 @@
             
             document.getElementById('filtro-ano').value = anoAtual;
             document.getElementById('filtro-mes').value = mesAtual;
+            document.getElementById('filtro-ano-lanc').value = anoAtual;
+            document.getElementById('filtro-mes-lanc').value = mesAtual;
             
             filtroAtual.ano = anoAtual.toString();
             filtroAtual.mes = mesAtual;
@@ -800,9 +842,8 @@
             updateCategorias();
         }
 
-        // ATUALIZAR ANOS DISPONÍVEIS NO DROPDOWN
+        // ATUALIZAR ANOS DISPONÍVEIS NOS DROPDOWNS
         function atualizarAnosDisponiveis() {
-            const select = document.getElementById('filtro-ano');
             const anos = new Set();
             
             // Ano atual e dos lançamentos
@@ -815,12 +856,21 @@
             
             const anosOrdenados = Array.from(anos).sort((a, b) => b - a);
             
-            select.innerHTML = '<option value="TODOS">Todos os anos</option>';
+            // Atualiza filtro do dashboard
+            const selectAnoDash = document.getElementById('filtro-ano');
+            selectAnoDash.innerHTML = '<option value="TODOS">Todos os anos</option>';
             anosOrdenados.forEach(ano => {
-                select.innerHTML += `<option value="${ano}">${ano}</option>`;
+                selectAnoDash.innerHTML += `<option value="${ano}">${ano}</option>`;
             });
+            selectAnoDash.value = filtroAtual.ano;
             
-            select.value = filtroAtual.ano;
+            // Atualiza filtro dos lançamentos
+            const selectAnoLanc = document.getElementById('filtro-ano-lanc');
+            selectAnoLanc.innerHTML = '<option value="TODOS">Todos os anos</option>';
+            anosOrdenados.forEach(ano => {
+                selectAnoLanc.innerHTML += `<option value="${ano}">${ano}</option>`;
+            });
+            selectAnoLanc.value = filtroAtual.ano;
         }
 
         // ATUALIZAR CATEGORIAS DINÂMICAS (só as usadas no período)
@@ -854,11 +904,29 @@
             container.innerHTML = html;
         }
 
-        // ATUALIZAR FILTROS
+        // ATUALIZAR FILTROS DO DASHBOARD
         function atualizarFiltros() {
             filtroAtual.ano = document.getElementById('filtro-ano').value;
             filtroAtual.mes = document.getElementById('filtro-mes').value;
             filtroAtual.categoria = 'TODOS'; // Reseta categoria ao mudar período
+            
+            // Sincroniza filtros dos lançamentos
+            document.getElementById('filtro-ano-lanc').value = filtroAtual.ano;
+            document.getElementById('filtro-mes-lanc').value = filtroAtual.mes;
+            
+            atualizarCategoriasDinamicas();
+            updateDashboard();
+            renderTable();
+        }
+
+        // ATUALIZAR FILTROS DOS LANÇAMENTOS
+        function atualizarFiltrosLancamentos() {
+            filtroAtual.ano = document.getElementById('filtro-ano-lanc').value;
+            filtroAtual.mes = document.getElementById('filtro-mes-lanc').value;
+            
+            // Sincroniza filtros do dashboard
+            document.getElementById('filtro-ano').value = filtroAtual.ano;
+            document.getElementById('filtro-mes').value = filtroAtual.mes;
             
             atualizarCategoriasDinamicas();
             updateDashboard();
@@ -990,7 +1058,7 @@
 
             let filtered = lancamentos;
 
-            // Filtros
+            // Filtros de ano e mês (sincronizados com dashboard)
             if (filtroAtual.ano !== 'TODOS') {
                 filtered = filtered.filter(l => {
                     const anoLanc = new Date(l.data + 'T12:00:00').getFullYear();
@@ -1035,6 +1103,23 @@
                 else if (l.tipo === 'Despesa') valorClass = 'valor-despesa';
                 else if (l.tipo === 'Investimento') valorClass = 'valor-investimento';
 
+                // Status e botão de pagar
+                let statusHtml = '';
+                let btnPagarHtml = '';
+                
+                if (l.tipo === 'Despesa') {
+                    if (l.pago) {
+                        statusHtml = '<span class="status-badge status-pago">✅ Pago</span>';
+                        btnPagarHtml = `<button class="btn-action btn-pay pago" onclick="togglePago(${l.id})">✓ Pago</button>`;
+                    } else {
+                        statusHtml = '<span class="status-badge status-pendente">⏳ Pendente</span>';
+                        btnPagarHtml = `<button class="btn-action btn-pay" onclick="togglePago(${l.id})">💳 Pagar</button>`;
+                    }
+                } else {
+                    statusHtml = '-';
+                    btnPagarHtml = '';
+                }
+
                 tr.innerHTML = `
                     <td>${dataStr}</td>
                     <td>${vencStr}</td>
@@ -1043,13 +1128,26 @@
                     <td><span class="tipo-badge ${l.tipo.toLowerCase()}">${l.tipo}</span></td>
                     <td>${l.categoria}</td>
                     <td class="${valorClass}">${formatMoney(l.valor)}</td>
+                    <td>${statusHtml}</td>
                     <td>
+                        ${btnPagarHtml}
                         <button class="btn-action btn-edit" onclick="editLancamento(${l.id})">✏️</button>
                         <button class="btn-action btn-delete" onclick="deleteLancamento(${l.id})">🗑️</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        // TOGGLE PAGO/NÃO PAGO
+        function togglePago(id) {
+            const l = lancamentos.find(x => x.id === id);
+            if (!l) return;
+            
+            l.pago = !l.pago;
+            saveData();
+            updateDashboard();
+            renderTable();
         }
 
         // ATUALIZAR CATEGORIAS NO FORMULÁRIO
