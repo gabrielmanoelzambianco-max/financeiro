@@ -746,6 +746,12 @@
         <!-- DASHBOARD -->
         <div id="dashboard-tab">
             <div class="filters-section">
+                                <div class="filter-group">
+                    <label>Ano</label>
+                    <div class="filter-buttons" id="ano-filters">
+                        <button class="filter-btn active" onclick="filterAno('TODOS', this)">TODOS</button>
+                    </div>
+                </div>
                 <div class="filter-group">
                     <label>Mês</label>
                     <div class="filter-buttons" id="mes-filters">
@@ -1290,7 +1296,16 @@
 
         let lancamentos = JSON.parse(localStorage.getItem('lancamentos')) || [];
         let vencimentosConfig = JSON.parse(localStorage.getItem('vencimentosConfig')) || {...VENCIMENTOS_INICIAIS};
-        let filtros = {mes: 'TODOS', categoria: 'TODOS', tipoLancamento: 'TODOS', mesLancamento: 'TODOS', catLancamento: 'TODOS', status: 'TODOS', search: ''};
+        let filtros = {
+            mes: 'TODOS', 
+            categoria: 'TODOS', 
+            tipoLancamento: 'TODOS', 
+            mesLancamento: 'TODOS', 
+            catLancamento: 'TODOS', 
+            status: 'TODOS', 
+            ano: 'TODOS',  // ADICIONE ISSO
+            search: ''
+        };
         let charts = { saldo: null, despesa: null, receita: null, comparativo: null };
         let currentExportFormat = 'json';
         let qrScannerStream = null;
@@ -1309,8 +1324,9 @@
             return MESES[date.getMonth()];
         }
 
-        function init() {
+                function init() {
             criarBotoesCategorias();
+            atualizarAnosDisponiveis(); // ADICIONE ISSO
             saveData();
             updateDashboard();
             renderTable();
@@ -1318,7 +1334,6 @@
             togglePagoField();
             renderCategoriasList();
         }
-
         function saveData() {
             localStorage.setItem('lancamentos', JSON.stringify(lancamentos));
             localStorage.setItem('vencimentosConfig', JSON.stringify(vencimentosConfig));
@@ -1361,7 +1376,41 @@
                 document.getElementById('navTabs').classList.remove('active');
             }
         }
+        let anosDisponiveis = [];
 
+        function atualizarAnosDisponiveis() {
+            // Pega todos os anos dos lançamentos
+            const anos = new Set();
+            lancamentos.forEach(l => {
+                const ano = new Date(l.data + 'T12:00:00').getFullYear();
+                anos.add(ano);
+            });
+            
+            // Adiciona ano atual e próximo se não tiver lançamentos
+            const anoAtual = new Date().getFullYear();
+            anos.add(anoAtual);
+            anos.add(anoAtual + 1);
+            
+            anosDisponiveis = Array.from(anos).sort((a, b) => b - a); // Decrescente (mais recente primeiro)
+            
+            // Atualiza os botões
+            const container = document.getElementById('ano-filters');
+            container.innerHTML = '<button class="filter-btn active" onclick="filterAno(\'TODOS\', this)">TODOS</button>';
+            
+            anosDisponiveis.forEach(ano => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.textContent = ano;
+                btn.onclick = function() { filterAno(ano, this); };
+                container.appendChild(btn);
+            });
+        }
+
+        function filterAno(ano, btn) {
+            filtros.ano = ano;
+            setActiveButton(document.getElementById('ano-filters'), btn);
+            renderTable();
+        }
         function setActiveButton(container, clickedBtn) {
             container.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             clickedBtn.classList.add('active');
@@ -1744,8 +1793,17 @@
             });
         }
 
-        function renderTable() {
+            function renderTable() {
             let filtered = lancamentos;
+            
+            // Filtro de ano
+            if (filtros.ano !== 'TODOS') {
+                filtered = filtered.filter(l => {
+                    const anoLanc = new Date(l.data + 'T12:00:00').getFullYear();
+                    return anoLanc === parseInt(filtros.ano);
+                });
+            }
+            
             if (filtros.tipoLancamento !== 'TODOS') filtered = filtered.filter(l => l.tipo === filtros.tipoLancamento);
             if (filtros.mesLancamento !== 'TODOS') filtered = filtered.filter(l => l.mes === filtros.mesLancamento);
             if (filtros.catLancamento !== 'TODOS') filtered = filtered.filter(l => l.categoria === filtros.catLancamento);
@@ -1755,6 +1813,9 @@
                 if (filtros.status === 'ATRASADO') filtered = filtered.filter(l => isAtrasado(l));
             }
             if (filtros.search) filtered = filtered.filter(l => l.descricao.toLowerCase().includes(filtros.search) || l.categoria.toLowerCase().includes(filtros.search));
+
+           
+        
 
             const tbody = document.getElementById('lancamentos-table');
             tbody.innerHTML = '';
@@ -1989,36 +2050,48 @@
                     }
                     alert(`✅ ${qtd} parcelas de ${formatMoney(valor/qtd)} criadas!`);
                     
-                                   } else if (isRecorrente) {
-                    // RECORRENTE CORRIGIDO - USA DATA DE VENCIMENTO COMO BASE
+                       } else if (isRecorrente) {
+                    // RECORRENTE: Data lançamento fixa (dia que fez), vencimento e mês aumentam
                     const qtdMeses = parseInt(document.getElementById('meses-recorrentes').value);
                     const grupoId = Date.now();
                     
-                    // USA A DATA DE VENCIMENTO COMO BASE (não a data do lançamento e nem o campo mes)
+                    // Data de lançamento FIXA (dia que o usuário está fazendo o lançamento)
+                    const dataLancFixa = data; // Ex: 21/02/2026
+                    
+                    // Extrai dia/mês/ano da data de lançamento
+                    const dataLancObj = new Date(data + 'T12:00:00');
+                    const diaLanc = dataLancObj.getDate(); // 21
+                    const mesLancBase = dataLancObj.getMonth(); // 1 (fevereiro)
+                    const anoLancBase = dataLancObj.getFullYear(); // 2026
+                    
+                    // Vencimento base (do formulário)
                     const vencDate = new Date(venc + 'T12:00:00');
-                    const diaVencimento = vencDate.getDate();
-                    const mesVenc = vencDate.getMonth(); // 0-11 (jan-dez)
-                    const anoVenc = vencDate.getFullYear();
+                    const diaVenc = vencDate.getDate(); // 15
+                    const mesVencBase = vencDate.getMonth(); // 2 (março)
+                    const anoVencBase = vencDate.getFullYear(); // 2026
                     
                     for (let i = 0; i < qtdMeses; i++) {
-                        // Calcula mês e ano corretamente
-                        const mesAlvo = mesVenc + i;
-                        const anoAlvo = anoVenc + Math.floor(mesAlvo / 12);
-                        const mesReal = mesAlvo % 12;
+                        // Mês do lançamento: aumenta a partir do mês da data de lançamento
+                        const mesLancAtual = mesLancBase + i;
+                        const anoLancAtual = anoLancBase + Math.floor(mesLancAtual / 12);
+                        const mesLancReal = mesLancAtual % 12;
                         
-                        // Ajusta para o último dia do mês se necessário
-                        const ultimoDiaDoMes = new Date(anoAlvo, mesReal + 1, 0).getDate();
-                        const diaFinal = Math.min(diaVencimento, ultimoDiaDoMes);
+                        // Vencimento: aumenta a partir do vencimento informado
+                        const mesVencAtual = mesVencBase + i;
+                        const anoVencAtual = anoVencBase + Math.floor(mesVencAtual / 12);
+                        const mesVencReal = mesVencAtual % 12;
                         
-                        // Cria as datas
-                        const dataLancamento = new Date(anoAlvo, mesReal, diaFinal, 12, 0, 0);
-                        const dataVencimento = new Date(anoAlvo, mesReal, diaFinal, 12, 0, 0);
+                        // Ajusta dia do vencimento se necessário
+                        const ultimoDiaVenc = new Date(anoVencAtual, mesVencReal + 1, 0).getDate();
+                        const diaFinalVenc = Math.min(diaVenc, ultimoDiaVenc);
+                        
+                        const dataVencObj = new Date(anoVencAtual, mesVencReal, diaFinalVenc, 12, 0, 0);
                         
                         lancamentos.push({
                             id: grupoId + i, 
-                            data: formatDateLocal(dataLancamento),
-                            dataVencimento: formatDateLocal(dataVencimento),
-                            mes: MESES[mesReal], // Pega o mês correto do array
+                            data: dataLancFixa, // SEMPRE A MESMA (dia que fez o lançamento)
+                            dataVencimento: formatDateLocal(dataVencObj), // Aumenta todo mês
+                            mes: MESES[mesLancReal], // FEV, MAR, ABR...
                             descricao: desc, 
                             tipo: tipo,
                             categoria: cat, 
@@ -2030,10 +2103,9 @@
                         });
                     }
                     
-                    const primeiroVenc = formatDateLocal(new Date(venc + 'T12:00:00'));
-                    const ultimoVenc = formatDateLocal(new Date(anoVenc + Math.floor((mesVenc + qtdMeses - 1) / 12), (mesVenc + qtdMeses - 1) % 12, Math.min(diaVencimento, new Date(anoVenc + Math.floor((mesVenc + qtdMeses - 1) / 12), (mesVenc + qtdMeses - 1) % 12 + 1, 0).getDate()), 12, 0, 0));
-                    
-                    alert(`✅ ${qtdMeses} lançamentos recorrentes de ${formatMoney(valor)} criados!\n\nPrimeiro: ${primeiroVenc}\nÚltimo: ${ultimoVenc}`);
+                    const primeiroMes = MESES[mesLancBase];
+                    const ultimoMes = MESES[(mesLancBase + qtdMeses - 1) % 12];
+                    alert(`✅ ${qtdMeses} lançamentos criados!\nMês: ${primeiroMes} até ${ultimoMes}\nVencimento: todo dia ${diaVenc}`);
                 } else {
                     // NORMAL
                     lancamentos.push({
